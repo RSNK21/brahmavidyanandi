@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nandi — Korvai Composer for Bharatanatyam</title>
+<style>
+{{STYLE}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app">
+    <h1><span class="om">◈</span> Nandi</h1>
+    <span class="tag">korvai composer · deterministic tala engine · curated cell library · AI selector (validated) — for Bharatanatyam</span>
+  </header>
+
+  <div class="layout">
+    <!-- ============ left: controls ============ -->
+    <div>
+      <div class="panel">
+        <h2>Tala &amp; Structure</h2>
+        <div class="field"><label>Tala</label><select id="tala"></select></div>
+        <div class="row2">
+          <div class="field"><label>Jati (laghu)</label><select id="jati"></select></div>
+          <div class="field"><label>Nadai (gati)</label><select id="nadai"></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Kalai</label><select id="kalai"></select></div>
+          <div class="field"><label>Eduppu</label><select id="eduppu"></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Cycles (avartanas)</label><select id="cycles"></select></div>
+          <div class="field"><label>Difficulty</label><select id="difficulty"></select></div>
+        </div>
+        <div class="field"><label>Template</label><select id="template"></select></div>
+        <div id="templateInfo" class="muted small"></div>
+        <div class="field" style="margin-top:10px"><label>Seed (deterministic)</label>
+          <div class="seedrow"><input type="number" id="seed" min="1" max="99999"><button class="btn" id="dice" title="random seed">🎲</button></div>
+        </div>
+        <div id="mathPreview" class="small"></div>
+        <button class="btn primary" id="generate">✦ Compose Korvai</button>
+        <div class="btnrow">
+          <button class="btn small" id="variations10">10 variations</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Playback</h2>
+        <div class="transport" style="margin:0 0 10px">
+          <button class="btn accent" id="play">▶ Play</button>
+          <button class="btn" id="stop">■ Stop</button>
+          <label>BPM <input type="range" id="bpm" min="24" max="180" style="width:110px"> <span class="val" id="bpmVal">60</span></label>
+          <label>Loops <select id="loops" style="width:56px"><option>1</option><option>2</option><option>3</option></select></label>
+          <label><input type="checkbox" id="metronome" checked> Metronome 👏</label>
+        </div>
+        <div class="muted small">Syllables are synthesized deterministically on the tala grid — audio is never AI-generated. Metronome accent marks sam.</div>
+      </div>
+
+      <div class="panel">
+        <h2>History</h2>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ============ right: results ============ -->
+    <div>
+      <div class="error" id="error"></div>
+      <div id="summary"></div>
+
+      <div class="tabbar">
+        <button class="active" data-pane="paneGrid">Tala grid</button>
+        <button data-pane="paneSol">Sollukattu</button>
+        <button data-pane="paneNat">Nattuvangam</button>
+        <button data-pane="paneDance">Dance counts &amp; adavus</button>
+        <button data-pane="paneAi">AI selector</button>
+      </div>
+
+      <div class="tabpane active" id="paneGrid">
+        <div id="grid"></div>
+        <div class="muted small">Each column = one akshara (beat), each row = one avartana. ◉ / gold edge = sam. Left border colors distinguish phrases; ● = heavy (edam) syllable, · = light. Click play to follow the highlight.</div>
+        <h3 class="sub">Remix engine (V2 — deterministic)</h3>
+        <div class="btnrow" id="remixRow"></div>
+        <div id="variations"></div>
+      </div>
+
+      <div class="tabpane" id="paneSol">
+        <div id="solkattuMeta"></div>
+        <div id="solkattuText" class="mono"></div>
+        <div class="btnrow">
+          <button class="btn small" id="copySolkattu">Copy</button>
+          <button class="btn small" id="dlSolkattu">Download .txt</button>
+          <button class="btn small" id="dlJson">Download .json</button>
+        </div>
+      </div>
+
+      <div class="tabpane" id="paneNat">
+        <div id="nattuvangam"></div>
+      </div>
+
+      <div class="tabpane" id="paneDance">
+        <div id="dance"></div>
+      </div>
+
+      <div class="tabpane" id="paneAi">
+        <div class="panel" style="background:transparent;border:none;padding:0">
+          <h2 style="margin-top:0">AI Rhythmic Selector — optional, off by default</h2>
+          <p class="small" style="color:var(--text)">
+            The AI never does tala arithmetic. It only <b>proposes cells from the curated library</b> for each phrase slot;
+            the engine validator re-counts every matra and rejects anything inexact (retry → deterministic fallback).
+            Default backend: <b>KonakolSwaraLLM</b> (<span class="mono">sgattup/KonakolSwaraLLM</span>) served locally via llama.cpp / LM Studio / Ollama — see <span class="mono">MODEL_SETUP.md</span>.
+          </p>
+          <div class="row2">
+            <div class="field"><label>API</label>
+              <select id="aiApi">
+                <option value="llamacpp">llama.cpp server (/completion)</option>
+                <option value="openai">OpenAI-compatible (/v1/chat/completions)</option>
+              </select>
+            </div>
+            <div class="field"><label>Model name</label><input type="text" id="aiModel"></div>
+          </div>
+          <div class="field"><label>Base URL</label><input type="text" id="aiUrl" placeholder="http://127.0.0.1:8080"></div>
+          <div class="field"><label>Temperature <span id="aiTempVal">0.7</span></label><input type="range" id="aiTemp" min="0" max="1.5" step="0.05"></div>
+          <div class="btnrow" style="margin-bottom:12px">
+            <button class="btn small" id="aiTest">Test endpoint</button>
+            <button class="btn small" id="aiPromptPreview">Preview prompt</button>
+            <button class="btn small accent" id="generateAi">✦ Compose with AI selector</button>
+          </div>
+          <div id="aiRawBox"><div class="muted small">Prompt sent to the model (KonakolSwaraLLM format):</div><pre id="aiRaw"></pre></div>
+          <div class="muted small" style="margin:8px 0 4px">Activity log</div>
+          <div id="aiLog"></div>
+          <div class="muted small" style="margin-top:8px">
+            Note: the in-app sandbox preview has no network access, so AI calls will (by design) fall back to the deterministic
+            engine there. Download/open the file locally (or serve it) for live model calls.
+          </div>
+        </div>
+      </div>
+
+      <footer class="app">
+        Architecture: rule-based tala engine + curated jathi/korvai library + (optional) AI recombination layer + deterministic audio —
+        <b>AI proposes, the engine disposes.</b> Every korvai shown is mathematically validated to fill the tala exactly.
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+window.KORVAI_SEED = {{SEED}};
+</script>
+<script>
+{{ENGINE}}
+</script>
+<script>
+{{AI}}
+</script>
+<script>
+{{AUDIO}}
+</script>
+<script>
+{{UI}}
+</script>
+</body>
+</html>

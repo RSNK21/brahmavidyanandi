@@ -1,0 +1,4257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nandi — Korvai Composer for Bharatanatyam</title>
+<style>
+:root {
+  --bg: #12100e;
+  --panel: #1c1916;
+  --panel2: #242019;
+  --line: #3a332a;
+  --text: #ece5d8;
+  --muted: #9a8f7d;
+  --gold: #d4a017;
+  --gold2: #facc15;
+  --maroon: #7c2d3e;
+  --teal: #2dd4bf;
+  --ok: #4ade80;
+  --bad: #f87171;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 "Segoe UI", system-ui, -apple-system, "Noto Sans", sans-serif;
+}
+.mono { font-family: "Cascadia Code", "SF Mono", Consolas, "Noto Sans Mono", monospace; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 14px 18px 60px; }
+
+header.app {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--line); padding: 14px 0 12px; margin-bottom: 14px;
+}
+header.app h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+header.app h1 .om { color: var(--gold); }
+header.app .tag { color: var(--muted); font-size: 13px; }
+.badge {
+  display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px;
+  border: 1px solid var(--line); background: var(--panel2); vertical-align: middle;
+}
+.badge-ok { color: var(--ok); border-color: var(--ok); }
+.badge-bad { color: var(--bad); border-color: var(--bad); }
+.badge-ai { color: var(--teal); border-color: var(--teal); }
+
+.layout { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.panel h2 { margin: 0 0 10px; font-size: 15px; color: var(--gold); letter-spacing: 0.4px; text-transform: uppercase; }
+.panel + .panel { margin-top: 14px; }
+
+.field { margin-bottom: 10px; }
+.field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; letter-spacing: 0.3px; }
+select, input[type=number], input[type=text] {
+  width: 100%; padding: 7px 9px; border-radius: 7px; border: 1px solid var(--line);
+  background: var(--panel2); color: var(--text); font-size: 14px;
+}
+select:focus, input:focus { outline: 1px solid var(--gold); }
+input[type=range] { width: 100%; accent-color: var(--gold); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seedrow { display: flex; gap: 6px; }
+.seedrow input { flex: 1; }
+
+.btn {
+  display: inline-block; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--panel2); color: var(--text); cursor: pointer; font-size: 14px;
+}
+.btn:hover { border-color: var(--gold); }
+.btn.primary {
+  background: linear-gradient(135deg, #8a3448, #5d1f30); border-color: #a8435c; font-weight: 600;
+  color: #ffe9e9; width: 100%; padding: 12px; font-size: 16px; margin-top: 4px;
+}
+.btn.primary:hover { filter: brightness(1.15); }
+.btn.accent { border-color: var(--gold); color: var(--gold2); }
+.btn.small { padding: 5px 10px; font-size: 12.5px; border-radius: 6px; }
+.btn.ghost { opacity: 0.85; }
+.btnrow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; }
+.error {
+  display: none; background: #3a1520; border: 1px solid var(--bad); color: #ffd7d7;
+  padding: 10px 12px; border-radius: 8px; margin: 10px 0; font-size: 14px;
+}
+
+#mathPreview { font-size: 13px; color: var(--muted); background: var(--panel2); padding: 8px 10px; border-radius: 8px; }
+#templateInfo { font-size: 13px; margin-top: 10px; color: var(--text); }
+
+/* summary chips */
+#summary { margin: 12px 0; }
+.sum-main { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip {
+  background: var(--panel2); border: 1px solid var(--line); padding: 4px 11px;
+  border-radius: 16px; font-size: 13px;
+}
+.chip.strong { border-color: var(--gold); color: var(--gold2); font-weight: 600; }
+.chip.warn { border-color: #b45309; color: #fbbf24; }
+
+/* tabs */
+.tabbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.tabbar button {
+  padding: 7px 14px; border-radius: 8px 8px 0 0; border: 1px solid var(--line);
+  background: var(--panel2); color: var(--muted); cursor: pointer; font-size: 13.5px;
+}
+.tabbar button.active { color: var(--gold2); border-bottom-color: var(--panel); background: var(--panel); }
+.tabpane { display: none; background: var(--panel); border: 1px solid var(--line); border-radius: 0 10px 10px 10px; padding: 14px; }
+.tabpane.active { display: block; }
+.sub { color: var(--gold); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; margin: 14px 0 8px; }
+
+/* grid */
+.avartana { display: flex; gap: 4px; margin-bottom: 8px; align-items: stretch; }
+.av-label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 11px; color: var(--muted); text-align: center; min-width: 18px; }
+.akshara { flex: 1; background: var(--panel2); border: 1px solid var(--line); border-radius: 7px; padding: 4px; min-width: 0; }
+.akshara.sam { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(212,160,23,0.35); }
+.ak-top { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); padding: 0 3px 3px; }
+.akshara.sam .ak-num { color: var(--gold2); font-weight: 700; }
+.ak-cells { display: flex; flex-direction: column; gap: 2px; }
+.m-cell {
+  position: relative; border-left: 3px solid #64748b; background: #191512;
+  padding: 2px 6px; border-radius: 3px; font-size: 12.5px; font-family: "Cascadia Code", Consolas, monospace;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.m-cell .w { float: right; color: var(--muted); font-size: 9px; }
+.m-cell.heavy { background: #221a12; }
+.m-cell.kaarvai { color: #5b6b7c; font-style: italic; }
+.m-cell.playing { outline: 2px solid var(--gold2); background: #33270e; }
+
+/* sollukattu */
+#solkattuText {
+  white-space: pre-wrap; font-family: "Cascadia Code", Consolas, "Noto Sans Mono", monospace;
+  font-size: 15px; line-height: 1.7; background: var(--panel2); padding: 14px; border-radius: 8px;
+  border: 1px solid var(--line); max-height: 420px; overflow: auto;
+}
+#solkattuMeta { margin: 8px 0; font-size: 13px; color: var(--muted); }
+
+/* nattuvangam */
+.nat-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.nat-table th { text-align: left; color: var(--gold); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.nat-table td { padding: 6px 8px; border-bottom: 1px solid #26201a; vertical-align: top; }
+.nat-table .sam-row td { background: rgba(212,160,23,0.07); }
+
+/* dance */
+.dance-counts { display: flex; flex-wrap: wrap; gap: 6px; }
+.dcount { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; min-width: 110px; flex: 1; }
+.dcount.sam { border-color: var(--gold); }
+.dnum { color: var(--gold2); font-weight: 700; font-size: 15px; }
+.dcount.sam .dnum { color: var(--gold); }
+.dsyl { font-family: "Cascadia Code", Consolas, monospace; font-size: 12.5px; margin-top: 2px; }
+.adavus { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.adavu { background: var(--panel2); border: 1px solid var(--line); border-radius: 9px; padding: 10px; }
+.ad-name { font-weight: 600; color: var(--gold2); }
+.ad-sol { font-size: 12.5px; margin: 4px 0; }
+.ad-desc { font-size: 12.5px; color: var(--text); opacity: 0.85; }
+
+/* variations */
+#variations { display: none; margin-top: 12px; }
+.var-row {
+  padding: 6px 10px; background: var(--panel2); border: 1px solid var(--line); border-radius: 7px;
+  margin-top: 6px; cursor: pointer; font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.var-row:hover { border-color: var(--gold); }
+
+/* history */
+.hist-row {
+  padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px;
+  cursor: pointer; font-size: 13px; background: var(--panel2);
+}
+.hist-row:hover { border-color: var(--gold); }
+
+/* ai panel */
+#aiLog {
+  background: #14110c; border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+  height: 170px; overflow-y: auto; font-size: 12.5px; font-family: Consolas, monospace;
+}
+.ai-line { margin-bottom: 3px; }
+.ai-ok { color: var(--ok); }
+.ai-warn { color: #fbbf24; }
+.ai-info { color: var(--muted); }
+#aiRaw {
+  background: #14110c; border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+  font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; max-height: 260px; overflow: auto;
+}
+#aiRawBox { display: none; margin-top: 10px; }
+
+/* transport */
+.transport { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--panel2); padding: 10px 12px; border-radius: 9px; margin: 12px 0; border: 1px solid var(--line); }
+.transport label { font-size: 12px; color: var(--muted); }
+.transport .val { color: var(--gold2); font-weight: 600; min-width: 28px; display: inline-block; }
+footer.app { margin-top: 26px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 12px; }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="app">
+    <h1><span class="om">◈</span> Nandi</h1>
+    <span class="tag">korvai composer · deterministic tala engine · curated cell library · AI selector (validated) — for Bharatanatyam</span>
+  </header>
+
+  <div class="layout">
+    <!-- ============ left: controls ============ -->
+    <div>
+      <div class="panel">
+        <h2>Tala &amp; Structure</h2>
+        <div class="field"><label>Tala</label><select id="tala"></select></div>
+        <div class="row2">
+          <div class="field"><label>Jati (laghu)</label><select id="jati"></select></div>
+          <div class="field"><label>Nadai (gati)</label><select id="nadai"></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Kalai</label><select id="kalai"></select></div>
+          <div class="field"><label>Eduppu</label><select id="eduppu"></select></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Cycles (avartanas)</label><select id="cycles"></select></div>
+          <div class="field"><label>Difficulty</label><select id="difficulty"></select></div>
+        </div>
+        <div class="field"><label>Template</label><select id="template"></select></div>
+        <div id="templateInfo" class="muted small"></div>
+        <div class="field" style="margin-top:10px"><label>Seed (deterministic)</label>
+          <div class="seedrow"><input type="number" id="seed" min="1" max="99999"><button class="btn" id="dice" title="random seed">🎲</button></div>
+        </div>
+        <div id="mathPreview" class="small"></div>
+        <button class="btn primary" id="generate">✦ Compose Korvai</button>
+        <div class="btnrow">
+          <button class="btn small" id="variations10">10 variations</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Playback</h2>
+        <div class="transport" style="margin:0 0 10px">
+          <button class="btn accent" id="play">▶ Play</button>
+          <button class="btn" id="stop">■ Stop</button>
+          <label>BPM <input type="range" id="bpm" min="24" max="180" style="width:110px"> <span class="val" id="bpmVal">60</span></label>
+          <label>Loops <select id="loops" style="width:56px"><option>1</option><option>2</option><option>3</option></select></label>
+          <label><input type="checkbox" id="metronome" checked> Metronome 👏</label>
+        </div>
+        <div class="muted small">Syllables are synthesized deterministically on the tala grid — audio is never AI-generated. Metronome accent marks sam.</div>
+      </div>
+
+      <div class="panel">
+        <h2>History</h2>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ============ right: results ============ -->
+    <div>
+      <div class="error" id="error"></div>
+      <div id="summary"></div>
+
+      <div class="tabbar">
+        <button class="active" data-pane="paneGrid">Tala grid</button>
+        <button data-pane="paneSol">Sollukattu</button>
+        <button data-pane="paneNat">Nattuvangam</button>
+        <button data-pane="paneDance">Dance counts &amp; adavus</button>
+        <button data-pane="paneAi">AI selector</button>
+      </div>
+
+      <div class="tabpane active" id="paneGrid">
+        <div id="grid"></div>
+        <div class="muted small">Each column = one akshara (beat), each row = one avartana. ◉ / gold edge = sam. Left border colors distinguish phrases; ● = heavy (edam) syllable, · = light. Click play to follow the highlight.</div>
+        <h3 class="sub">Remix engine (V2 — deterministic)</h3>
+        <div class="btnrow" id="remixRow"></div>
+        <div id="variations"></div>
+      </div>
+
+      <div class="tabpane" id="paneSol">
+        <div id="solkattuMeta"></div>
+        <div id="solkattuText" class="mono"></div>
+        <div class="btnrow">
+          <button class="btn small" id="copySolkattu">Copy</button>
+          <button class="btn small" id="dlSolkattu">Download .txt</button>
+          <button class="btn small" id="dlJson">Download .json</button>
+        </div>
+      </div>
+
+      <div class="tabpane" id="paneNat">
+        <div id="nattuvangam"></div>
+      </div>
+
+      <div class="tabpane" id="paneDance">
+        <div id="dance"></div>
+      </div>
+
+      <div class="tabpane" id="paneAi">
+        <div class="panel" style="background:transparent;border:none;padding:0">
+          <h2 style="margin-top:0">AI Rhythmic Selector — optional, off by default</h2>
+          <p class="small" style="color:var(--text)">
+            The AI never does tala arithmetic. It only <b>proposes cells from the curated library</b> for each phrase slot;
+            the engine validator re-counts every matra and rejects anything inexact (retry → deterministic fallback).
+            Default backend: <b>KonakolSwaraLLM</b> (<span class="mono">sgattup/KonakolSwaraLLM</span>) served locally via llama.cpp / LM Studio / Ollama — see <span class="mono">MODEL_SETUP.md</span>.
+          </p>
+          <div class="row2">
+            <div class="field"><label>API</label>
+              <select id="aiApi">
+                <option value="llamacpp">llama.cpp server (/completion)</option>
+                <option value="openai">OpenAI-compatible (/v1/chat/completions)</option>
+              </select>
+            </div>
+            <div class="field"><label>Model name</label><input type="text" id="aiModel"></div>
+          </div>
+          <div class="field"><label>Base URL</label><input type="text" id="aiUrl" placeholder="http://127.0.0.1:8080"></div>
+          <div class="field"><label>Temperature <span id="aiTempVal">0.7</span></label><input type="range" id="aiTemp" min="0" max="1.5" step="0.05"></div>
+          <div class="btnrow" style="margin-bottom:12px">
+            <button class="btn small" id="aiTest">Test endpoint</button>
+            <button class="btn small" id="aiPromptPreview">Preview prompt</button>
+            <button class="btn small accent" id="generateAi">✦ Compose with AI selector</button>
+          </div>
+          <div id="aiRawBox"><div class="muted small">Prompt sent to the model (KonakolSwaraLLM format):</div><pre id="aiRaw"></pre></div>
+          <div class="muted small" style="margin:8px 0 4px">Activity log</div>
+          <div id="aiLog"></div>
+          <div class="muted small" style="margin-top:8px">
+            Note: the in-app sandbox preview has no network access, so AI calls will (by design) fall back to the deterministic
+            engine there. Download/open the file locally (or serve it) for live model calls.
+          </div>
+        </div>
+      </div>
+
+      <footer class="app">
+        Architecture: rule-based tala engine + curated jathi/korvai library + (optional) AI recombination layer + deterministic audio —
+        <b>AI proposes, the engine disposes.</b> Every korvai shown is mathematically validated to fill the tala exactly.
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+window.KORVAI_SEED = {
+  "schemaVersion": 1,
+  "talas": [
+    {
+      "id": "adi",
+      "name": "Adi",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        }
+      ],
+      "aksharas": 8
+    },
+    {
+      "id": "rupaka",
+      "name": "Rupaka",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 6
+    },
+    {
+      "id": "tisra_triputa",
+      "name": "Tisra Triputa",
+      "jati": "Tisra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 3
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        }
+      ],
+      "aksharas": 7
+    },
+    {
+      "id": "khanda_chapu",
+      "name": "Khanda Chapu",
+      "jati": "Khanda",
+      "angas": [
+        {
+          "type": "section",
+          "aksharas": 2
+        },
+        {
+          "type": "section",
+          "aksharas": 3
+        }
+      ],
+      "aksharas": 5
+    },
+    {
+      "id": "misra_chapu",
+      "name": "Misra Chapu",
+      "jati": "Misra",
+      "angas": [
+        {
+          "type": "section",
+          "aksharas": 3
+        },
+        {
+          "type": "section",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 7
+    },
+    {
+      "id": "eka",
+      "name": "Eka",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 4
+    },
+    {
+      "id": "matya",
+      "name": "Matya",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 10
+    },
+    {
+      "id": "ata",
+      "name": "Ata",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        }
+      ],
+      "aksharas": 12
+    },
+    {
+      "id": "dhruva",
+      "name": "Dhruva",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 14
+    }
+  ],
+  "jatis": [
+    {
+      "id": "tisra",
+      "name": "Tisra",
+      "laghu": 3
+    },
+    {
+      "id": "chaturasra",
+      "name": "Chaturasra",
+      "laghu": 4
+    },
+    {
+      "id": "khanda",
+      "name": "Khanda",
+      "laghu": 5
+    },
+    {
+      "id": "misra",
+      "name": "Misra",
+      "laghu": 7
+    },
+    {
+      "id": "sankirna",
+      "name": "Sankirna",
+      "laghu": 9
+    }
+  ],
+  "nadais": [
+    {
+      "id": "tisra",
+      "name": "Tisra",
+      "subdivision": 3
+    },
+    {
+      "id": "chaturasra",
+      "name": "Chaturasra",
+      "subdivision": 4
+    },
+    {
+      "id": "khanda",
+      "name": "Khanda",
+      "subdivision": 5
+    },
+    {
+      "id": "misra",
+      "name": "Misra",
+      "subdivision": 7
+    },
+    {
+      "id": "sankirna",
+      "name": "Sankirna",
+      "subdivision": 9
+    }
+  ],
+  "eduppus": [
+    {
+      "id": "samam",
+      "name": "Samam",
+      "aksharas": 0
+    },
+    {
+      "id": "arai",
+      "name": "1/2 akshara",
+      "aksharas": 0.5
+    },
+    {
+      "id": "idu",
+      "name": "1 akshara",
+      "aksharas": 1
+    },
+    {
+      "id": "idiyam",
+      "name": "1 1/2 akshara",
+      "aksharas": 1.5
+    },
+    {
+      "id": "randam",
+      "name": "2 aksharas",
+      "aksharas": 2
+    }
+  ],
+  "cells": [
+    {
+      "id": "c_ta",
+      "notation": "ta",
+      "syllables": [
+        "ta"
+      ],
+      "durations": [
+        1
+      ],
+      "matraCount": 1,
+      "weights": [
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_taka",
+      "notation": "ta ka",
+      "syllables": [
+        "ta",
+        "ka"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "L",
+        "L"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_takita",
+      "notation": "ta ki ta",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takadimi",
+      "notation": "ta ka di mi",
+      "syllables": [
+        "ta",
+        "ka",
+        "di",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takajonu",
+      "notation": "ta ka jo nu",
+      "syllables": [
+        "ta",
+        "ka",
+        "jo",
+        "nu"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "STRAIGHT",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_thakadhimi",
+      "notation": "tha ka dhi mi",
+      "syllables": [
+        "tha",
+        "ka",
+        "dhi",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_tarikita",
+      "notation": "ta ri ki ta",
+      "syllables": [
+        "ta",
+        "ri",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_dhimithaka",
+      "notation": "dhi mi ta ka",
+      "syllables": [
+        "dhi",
+        "mi",
+        "ta",
+        "ka"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "L",
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_kitataka",
+      "notation": "ki ta ta ka",
+      "syllables": [
+        "ki",
+        "ta",
+        "ta",
+        "ka"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "H",
+        "L",
+        "L"
+      ],
+      "character": "SQUARE",
+      "function": "FILLER",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takatakita",
+      "notation": "ta ka ta ki ta",
+      "syllables": [
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 5,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "khanda"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_taditakajonu",
+      "notation": "ta di ta ka jo nu",
+      "syllables": [
+        "ta",
+        "di",
+        "ta",
+        "ka",
+        "jo",
+        "nu"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "STRAIGHT",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_thakatharikita",
+      "notation": "tha ka tha ri ki ta",
+      "syllables": [
+        "tha",
+        "ka",
+        "tha",
+        "ri",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takita_x2",
+      "notation": "ta ki ta ta ki ta",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "FILLER",
+      "usableNadais": [
+        "tisra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takadimi_x2",
+      "notation": "ta ka dhi mi tha ka dhi mi",
+      "syllables": [
+        "ta",
+        "ka",
+        "dhi",
+        "mi",
+        "tha",
+        "ka",
+        "dhi",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 8,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takajonu_thakadhimi",
+      "notation": "ta ka jo nu tha ka dhi mi",
+      "syllables": [
+        "ta",
+        "ka",
+        "jo",
+        "nu",
+        "tha",
+        "ka",
+        "dhi",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 8,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "STRAIGHT",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "mohra"
+      ]
+    },
+    {
+      "id": "c_takitatakadimi",
+      "notation": "ta ki ta ta ka di mi",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 7,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "misra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takadimitakita",
+      "notation": "ta ka di mi ta ki ta",
+      "syllables": [
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 7,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "misra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takatakimix2",
+      "notation": "ta ka ta ki ta ta ka ta ki ta",
+      "syllables": [
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 10,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "khanda"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "c_faran_tisra",
+      "notation": "ta ki ta × 4",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 12,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "MACRO",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 4,
+      "tags": [
+        "faran",
+        "tisra-gati"
+      ]
+    },
+    {
+      "id": "c_faran_khanda",
+      "notation": "ta ka ta ki ta × 4",
+      "syllables": [
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 20,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "MACRO",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 5,
+      "tags": [
+        "faran",
+        "khanda-gati"
+      ]
+    },
+    {
+      "id": "c_faran_misra",
+      "notation": "ta ki ta ta ka di mi × 4",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 28,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "MACRO",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 5,
+      "tags": [
+        "faran",
+        "misra-gati"
+      ]
+    },
+    {
+      "id": "c_gap2",
+      "notation": "— —",
+      "syllables": [
+        "—",
+        "—"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "L",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "GAP",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "kaarvai": true
+    },
+    {
+      "id": "c_gap3",
+      "notation": "— — —",
+      "syllables": [
+        "—",
+        "—",
+        "—"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "L",
+        "L",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "GAP",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "kaarvai": true
+    },
+    {
+      "id": "c_gap4",
+      "notation": "— — — —",
+      "syllables": [
+        "—",
+        "—",
+        "—",
+        "—"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "GAP",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "kaarvai": true
+    },
+    {
+      "id": "c_taiyaitaiyai",
+      "notation": "tai yai tai yai",
+      "syllables": [
+        "tai",
+        "yai",
+        "tai",
+        "yai"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "FILLER",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 1,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_taihattaihi",
+      "notation": "tai hat tai hi",
+      "syllables": [
+        "tai",
+        "hat",
+        "tai",
+        "hi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "dance",
+        "kudittu"
+      ]
+    },
+    {
+      "id": "c_taitat",
+      "notation": "tai tat",
+      "syllables": [
+        "tai",
+        "tat"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_thathai",
+      "notation": "tha thai",
+      "syllables": [
+        "tha",
+        "thai"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "L"
+      ],
+      "character": "RESONANT",
+      "function": "TRANSITION",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thaithathom",
+      "notation": "thai tha thom",
+      "syllables": [
+        "thai",
+        "tha",
+        "thom"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra"
+      ],
+      "difficulty": 2,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_thadhithom",
+      "notation": "tha dhi thom",
+      "syllables": [
+        "tha",
+        "dhi",
+        "thom"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "TRANSITION",
+      "usableNadais": [
+        "tisra",
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_tham",
+      "notation": "tham",
+      "syllables": [
+        "tham"
+      ],
+      "durations": [
+        1
+      ],
+      "matraCount": 1,
+      "weights": [
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thom2",
+      "notation": "thom,",
+      "syllables": [
+        "thom"
+      ],
+      "durations": [
+        2
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thathom",
+      "notation": "tha tham",
+      "syllables": [
+        "tha",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thakatham",
+      "notation": "tha ka tham",
+      "syllables": [
+        "tha",
+        "ka",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_namthom",
+      "notation": "nam thom",
+      "syllables": [
+        "nam",
+        "thom"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_thathaiatham",
+      "notation": "tha thai tha tham",
+      "syllables": [
+        "tha",
+        "thai",
+        "tha",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "ENDING",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2,
+      "tags": [
+        "mohra",
+        "dance"
+      ]
+    },
+    {
+      "id": "c_dhiththaithathom",
+      "notation": "dhi thit thai tham",
+      "syllables": [
+        "dhi",
+        "thit",
+        "thai",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "ENDING",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_taihat_x3",
+      "notation": "tai hat tai hat tai hi",
+      "syllables": [
+        "tai",
+        "hat",
+        "tai",
+        "hat",
+        "tai",
+        "hi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L",
+        "H",
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "ENDING",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "dance",
+        "teermana"
+      ]
+    }
+  ],
+  "aliases": [
+    {
+      "notation": "ta ka di mi",
+      "variants": [
+        "ta ka di mi",
+        "ta ka dhi mi",
+        "tha ka dhi mi",
+        "ta ka jhi mi"
+      ]
+    },
+    {
+      "notation": "ta ka jo nu",
+      "variants": [
+        "ta ka jo nu",
+        "ta ka jo no",
+        "tha ka jo nu"
+      ]
+    },
+    {
+      "notation": "ta ki ta",
+      "variants": [
+        "ta ki ta",
+        "tha ki ta",
+        "ta ki tom",
+        "ta din gi"
+      ]
+    },
+    {
+      "notation": "ta ka ta ki ta",
+      "variants": [
+        "ta ka ta ki ta",
+        "tha ka tha ki ta",
+        "ta ka ta ki tom"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "korvai_x3",
+      "name": "Korvai — X X X",
+      "tags": [
+        "korvai"
+      ],
+      "description": "One phrase stated three times, landing on sam. The classic dance/mridangam cadence.",
+      "structure": "X X X + landing",
+      "repetitions": 3,
+      "landingMode": "eduppu",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Korvai phrase",
+          "minMatra": 2,
+          "maxMatra": 64,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "korvai_crescendo",
+      "name": "Korvai — 13-14-15 crescendo",
+      "tags": [
+        "korvai"
+      ],
+      "description": "Three phrases of increasing length (n, n+1, n+2); the whole group is played three times, then the landing. The canonical Adi/2-kalai/2-avartana korvai is 13+14+15 ×3 + 2 = 128.",
+      "structure": "(A B C) ×3 + landing",
+      "repetitions": 3,
+      "landingMode": "eduppu",
+      "staircase": 1,
+      "slots": [
+        {
+          "id": "A",
+          "label": "Short phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        },
+        {
+          "id": "B",
+          "label": "Medium phrase",
+          "minMatra": 3,
+          "maxMatra": 49,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        },
+        {
+          "id": "C",
+          "label": "Long phrase",
+          "minMatra": 4,
+          "maxMatra": 50,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "teermana_x3",
+      "name": "Teermana — X X X (sam landings)",
+      "tags": [
+        "teermana",
+        "korvai"
+      ],
+      "description": "A phrase spanning whole avartanas, played three times — each statement lands on sam (the phrase itself supplies the landing). Typical tirmana/teermana finisher.",
+      "structure": "X X X (each X = whole avartanas)",
+      "repetitions": 3,
+      "landingMode": "none",
+      "multipleOf": "avartana",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Teermana phrase",
+          "minMatra": 2,
+          "maxMatra": 128,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION",
+            "ENDING"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "mohra_korvai",
+      "name": "Mohra → Korvai",
+      "tags": [
+        "mohra",
+        "korvai"
+      ],
+      "description": "Full cadence: (A A A B) ×3 mohra rounds, the 'tha thai tha tham' cadence ×3, then a X X X korvai + landing. Front-padded with kaarvai to fill the tala cycles.",
+      "structure": "(A A A B)×3 · C×3 · X X X + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "autoAvartanas": true,
+      "slots": [
+        {
+          "id": "A",
+          "label": "Mohra line",
+          "minMatra": 8,
+          "maxMatra": 8,
+          "allowedFunctions": [
+            "CORE"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "B",
+          "label": "Mohra answer",
+          "minMatra": 8,
+          "maxMatra": 8,
+          "allowedFunctions": [
+            "CORE"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "C",
+          "label": "Cadence",
+          "fixedCell": "c_thathaiatham"
+        },
+        {
+          "id": "X",
+          "label": "Korvai phrase",
+          "minMatra": 2,
+          "maxMatra": 32,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "kuraippu",
+      "name": "Kuraippu (diminishing)",
+      "tags": [
+        "kuraippu"
+      ],
+      "description": "A long phrase restated in progressively shorter versions (roughly halving), converging onto sam. Drama through reduction.",
+      "structure": "A A/2 A/4 … + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "kind": "kuraippu",
+      "slots": [
+        {
+          "id": "A",
+          "label": "Opening phrase",
+          "minMatra": 4,
+          "maxMatra": 64,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "tirmana",
+      "name": "Tirmana (3-4-5 ×3)",
+      "tags": [
+        "tirmana",
+        "dance"
+      ],
+      "description": "The Bharatanatyam tirmana: a 3-matra phrase ×3, a 4-matra phrase ×3, a 5-matra phrase ×3 (ta-ki-ta / ta-ka-dhi-mi / ta-ka-ta-ki-ta families), then landing.",
+      "structure": "T3×3 T4×3 T5×3 + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "autoAvartanas": true,
+      "slots": [
+        {
+          "id": "T3",
+          "label": "3-matra phrase",
+          "minMatra": 3,
+          "maxMatra": 3,
+          "allowedFunctions": [
+            "CORE",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "T4",
+          "label": "4-matra phrase",
+          "minMatra": 4,
+          "maxMatra": 4,
+          "allowedFunctions": [
+            "CORE",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "T5",
+          "label": "5-matra phrase",
+          "minMatra": 5,
+          "maxMatra": 5,
+          "allowedFunctions": [
+            "CORE",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        }
+      ]
+    },
+    {
+      "id": "jathi_1avartana",
+      "name": "Jathi — one avartana",
+      "tags": [
+        "jathi"
+      ],
+      "description": "A single-cycle pattern exactly filling one avartana of the chosen tala/nadai/kalai. Building block for jathis.",
+      "structure": "X (exactly one avartana)",
+      "repetitions": 1,
+      "landingMode": "none",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Jathi phrase",
+          "minMatra": 2,
+          "maxMatra": 128,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION",
+            "ENDING"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "faran",
+      "name": "Faran (cross-rhythm)",
+      "tags": [
+        "faran"
+      ],
+      "description": "A cross-rhythm cell (tisra/khanda/misra inside chaturasra) repeated to span whole aksharas — mathematically guaranteed to resolve.",
+      "structure": "F × n (resolves on sam)",
+      "repetitions": 1,
+      "landingMode": "none",
+      "kind": "faran",
+      "slots": [
+        {
+          "id": "F",
+          "label": "Faran cell",
+          "allowedFunctions": [
+            "MACRO"
+          ],
+          "allowGaps": false
+        }
+      ]
+    },
+    {
+      "id": "gap_korvai",
+      "name": "Kaarvai korvai (with gaps)",
+      "tags": [
+        "korvai"
+      ],
+      "description": "Korvai shape where each statement of the phrase is separated by a kaarvai (rest), building tension into sam.",
+      "structure": "X G X G X + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Korvai phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "G",
+          "label": "Kaarvai",
+          "minMatra": 2,
+          "maxMatra": 4,
+          "allowedFunctions": [
+            "GAP"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "aba_sandwich",
+      "name": "A-B-A sandwich",
+      "tags": [
+        "korvai"
+      ],
+      "description": "Open and close with the same phrase, different contrasting material in the middle. Good for jathi variation.",
+      "structure": "A B A + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "slots": [
+        {
+          "id": "A",
+          "label": "Frame phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        },
+        {
+          "id": "B",
+          "label": "Contrast phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    }
+  ],
+  "adavus": [
+    {
+      "id": "tatta",
+      "name": "Tatta Adavu",
+      "family": "Tatta",
+      "sollukattu": "thai yai that",
+      "counts": 8,
+      "characters": [
+        "SQUARE",
+        "STRAIGHT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Flat-foot strikes in ardhamandali; the first adavu learned.",
+      "difficulty": 1
+    },
+    {
+      "id": "natta",
+      "name": "Natta Adavu",
+      "family": "Natta",
+      "sollukattu": "thai yai that (nattu)",
+      "counts": 8,
+      "characters": [
+        "SQUARE",
+        "STRAIGHT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Nattu position with heel-strike stretches; mardiya stance work.",
+      "difficulty": 2
+    },
+    {
+      "id": "visharu",
+      "name": "Visharu Adavu",
+      "family": "Visharu",
+      "sollukattu": "ta thei thei tat",
+      "counts": 8,
+      "characters": [
+        "FLOWING",
+        "STRAIGHT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Side-swinging traverse steps (visharu — to spread out), covering stage space.",
+      "difficulty": 2
+    },
+    {
+      "id": "kudittu_mettu",
+      "name": "Kudittu Mettu Adavu",
+      "family": "Kudittu Mettu",
+      "sollukattu": "tai hat tai hi",
+      "counts": 8,
+      "characters": [
+        "BRISK"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Jump-and-strike mettu combinations; sharp, percussive landings.",
+      "difficulty": 3
+    },
+    {
+      "id": "sarikkal",
+      "name": "Sarikkal / Kal Adavu",
+      "family": "Sarikkal",
+      "sollukattu": "tha thei thei",
+      "counts": 8,
+      "characters": [
+        "STRAIGHT",
+        "RESONANT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Gliding/sliding steps (sarikka — to glide) with held endings.",
+      "difficulty": 2
+    },
+    {
+      "id": "mandi",
+      "name": "Mandi Adavu",
+      "family": "Mandi",
+      "sollukattu": "tha thai thai (mandi)",
+      "counts": 8,
+      "characters": [
+        "RESONANT",
+        "SQUARE"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Full-sit (mandi) positions with sweeping strikes.",
+      "difficulty": 4
+    },
+    {
+      "id": "tirmana_adavu",
+      "name": "Tirmana Adavu",
+      "family": "Tirmana",
+      "sollukattu": "ta ki ta · ta ka dhi mi · ta ka ta ki ta",
+      "counts": 36,
+      "characters": [
+        "FLOWING"
+      ],
+      "nadais": [
+        "chaturasra",
+        "tisra"
+      ],
+      "description": "The classic three-pace finisher (3-4-5) closing jathis and varnams.",
+      "difficulty": 4
+    },
+    {
+      "id": "teermana_adavu",
+      "name": "Teermana Adavu",
+      "family": "Teermana",
+      "sollukattu": "tai hat tai hat tai hi",
+      "counts": 6,
+      "characters": [
+        "BRISK",
+        "RESONANT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Triple-landing finishing adavu that converges on sam.",
+      "difficulty": 4
+    },
+    {
+      "id": "panjanan",
+      "name": "Panjanan Adavu",
+      "family": "Panjanan",
+      "sollukattu": "thai that thai that thai hi",
+      "counts": 8,
+      "characters": [
+        "SQUARE"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Sharp striking combinations in place; strong arangetram material.",
+      "difficulty": 3
+    },
+    {
+      "id": "hitchu",
+      "name": "Hitchu / Kattadavu",
+      "family": "Kattu",
+      "sollukattu": "kit a ta ka",
+      "counts": 8,
+      "characters": [
+        "SQUARE",
+        "BRISK"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Small held-step adavus used as connectors between larger movements.",
+      "difficulty": 2
+    },
+    {
+      "id": "thagaditham",
+      "name": "Thagaditham Adavu",
+      "family": "Thagaditham",
+      "sollukattu": "tha ka dhi mi thom (thagaditham)",
+      "counts": 8,
+      "characters": [
+        "RESONANT",
+        "FLOWING"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Tha-ga-di-gee-thom striking sequence with chest and foot accents.",
+      "difficulty": 3
+    },
+    {
+      "id": "sutral",
+      "name": "Sutral / Bramari Adavu",
+      "family": "Sutral",
+      "sollukattu": "thai yai that (turn)",
+      "counts": 8,
+      "characters": [
+        "FLOWING",
+        "BRISK"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Spinning/turning adavus for coverage and closure of stage space.",
+      "difficulty": 5
+    }
+  ]
+};
+</script>
+<script>
+/* =====================================================================
+ * Korvai Composer — Tala Constraint Engine (pure, deterministic, no AI)
+ *
+ * Architecture per the build handoff:
+ *   Tala math is exact arithmetic. Nothing in this file calls a network,
+ *   uses randomness that is not seeded, or trusts any AI output.
+ *   Every resolved structure MUST pass `validateResolution()` before it
+ *   reaches the UI. AI proposes; this engine disposes.
+ * ===================================================================== */
+(function (root) {
+  'use strict';
+
+  /* ---------- seeded RNG (mulberry32) ---------- */
+  function makeRng(seed) {
+    let a = (seed >>> 0) || 1;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(arr, rng) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  /* ---------- jati / anga helpers ---------- */
+  // The chosen jati resizes every laghu. Chapu sections are fixed.
+  function applyJati(tala, jatiId, jatis) {
+    const j = jatis.find((x) => x.id === jatiId) || jatis.find((x) => x.id === tala.jati);
+    const laghu = j ? j.laghu : 4;
+    const angas = tala.angas.map((a) => (a.type === 'laghu' ? { type: 'laghu', aksharas: laghu } : a));
+    return { ...tala, jati: j ? j.id : tala.jati, angas, aksharas: angas.reduce((s, a) => s + a.aksharas, 0) };
+  }
+
+  function totalMatras(tala, nadai, kalai, avartanas) {
+    return tala.aksharas * nadai.subdivision * kalai * avartanas;
+  }
+
+  // Landing phrase length. Samam -> the classic 2-unit landing ("tha," held),
+  // matching the canonical 13+14+15 ×3 + 2 = 128 worked example.
+  // For eduppu e (in aksharas) the phrase must land e aksharas *before* the
+  // next sam, so it occupies e * nadai * kalai matras (min 1).
+  function computeLandingUnits(eduppuAksharas, nadai, kalai) {
+    if (!eduppuAksharas || eduppuAksharas <= 0) return 2;
+    return Math.max(1, Math.round(eduppuAksharas * nadai.subdivision * kalai));
+  }
+
+  /* ---------- clap / wave pattern (nattuvangam grid) ---------- */
+  function clapPattern(tala) {
+    // per akshara: {mark: 'clap'|'wave'|'count'|'rest', angaIndex}
+    const out = [];
+    tala.angas.forEach((anga, ai) => {
+      for (let k = 0; k < anga.aksharas; k++) {
+        if (anga.type === 'laghu') out.push({ mark: k === 0 ? 'clap' : 'count', angaIndex: ai });
+        else if (anga.type === 'dhrutam') out.push({ mark: k === 0 ? 'clap' : 'wave', angaIndex: ai });
+        else if (anga.type === 'anudhrutam') out.push({ mark: 'wave', angaIndex: ai });
+        else out.push({ mark: k === 0 ? 'clap' : 'rest', angaIndex: ai }); // chapu section
+      }
+    });
+    return out;
+  }
+
+  /* ---------- segment fill: subset-sum over the cell library ---------- */
+  // Filters the library by the slot's constraints, then randomised backtracking
+  // search for cells whose matra counts sum to exactly `length`.
+  function eligibleCells(library, slot, nadaiId, maxDifficulty) {
+    return library.cells.filter((c) => {
+      if (c.matraCount < 1) return false;
+      if (!c.usableNadais.includes(nadaiId)) return false;
+      if (c.difficulty > maxDifficulty) return false;
+      if (slot.allowedFunctions && slot.allowedFunctions.length) {
+        if (!slot.allowedFunctions.includes(c.function)) return false;
+      }
+      if (c.function === 'GAP' && !slot.allowGaps) return false;
+      if (c.function === 'LANDING' || c.function === 'MACRO') return false; // handled separately
+      return true;
+    });
+  }
+
+  function scoreCell(cell, ctx) {
+    // preference: difficulty close to target, variety bonus, kaarvai slight penalty
+    let s = 1;
+    s *= 1 / (1 + Math.abs(cell.difficulty - ctx.targetDifficulty));
+    if (cell.kaarvai) s *= ctx.gapAffinity;
+    if (ctx.lastCellId === cell.id) s *= 0.25;
+    if (ctx.charactersSeen && ctx.charactersSeen.has(cell.character)) s *= 0.8;
+    return s;
+  }
+
+  function weightedOrder(cells, ctx, rng) {
+    const arr = cells.map((c) => ({ c, w: scoreCell(c, ctx) }));
+    arr.sort((x, y) => y.w * (0.5 + rng()) - x.w * (0.5 + rng()));
+    return arr.map((x) => x.c);
+  }
+
+  function fillSegment(length, slot, library, nadaiId, maxDifficulty, targetDifficulty, rng, opts) {
+    opts = opts || {};
+    const pool = eligibleCells(library, slot, nadaiId, maxDifficulty);
+    if (!pool.length) return null;
+    const piecesLimit = opts.maxPieces || 12;
+    const result = [];
+
+    function bt(remaining, depth) {
+      if (remaining === 0) return true;
+      if (depth >= piecesLimit) return false;
+      const ctx = {
+        targetDifficulty,
+        gapAffinity: opts.gapAffinity != null ? opts.gapAffinity : 0.55,
+        lastCellId: result.length ? result[result.length - 1].id : null,
+        charactersSeen: new Set(result.map((c) => c.character)),
+      };
+      // prefer larger cells first for long stretches, weighted-randomised
+      let candidates = pool.filter((c) => c.matraCount <= remaining);
+      if (depth === 0 && opts.firstCellMustDifferFrom) {
+        candidates = candidates.filter((c) => c.id !== opts.firstCellMustDifferFrom);
+        if (!candidates.length) candidates = pool.filter((c) => c.matraCount <= remaining);
+      }
+      candidates = weightedOrder(candidates, ctx, rng);
+      for (const c of candidates) {
+        result.push(c);
+        if (bt(remaining - c.matraCount, depth + 1)) return true;
+        result.pop();
+      }
+      return false;
+    }
+    if (bt(length, 0)) return result;
+    return null;
+  }
+
+  /* ---------- kuraippu lengths (diminishing series) ---------- */
+  function kuraippuLengths(body) {
+    const segs = [];
+    let rem = body;
+    let L = Math.pow(2, Math.floor(Math.log2(Math.max(2, body))));
+    if (L > body) L = L / 2;
+    while (rem > 0) {
+      const take = Math.min(L, rem);
+      segs.push(take);
+      rem -= take;
+      L = Math.max(2, Math.floor(take / 2));
+      if (L % 2 === 1 && L > 2) L = L - 1;
+    }
+    return segs;
+  }
+
+  /* ---------- landing cell pick ---------- */
+  function pickLanding(library, units, nadaiId, rng) {
+    const cands = library.cells.filter(
+      (c) => c.function === 'LANDING' && c.matraCount === units && c.usableNadais.includes(nadaiId)
+    );
+    if (!cands.length) return null;
+    return cands[Math.floor(rng() * cands.length)];
+  }
+
+  /* ---------- main solver ---------- */
+  // config: {tala, nadai, kalai, eduppuAksharas, avartanas|'auto', template,
+  //          library, maxDifficulty, targetDifficulty, seed}
+  // Returns {ok, resolution} — resolution.always validated by validateResolution.
+  function solve(config) {
+    const { tala, nadai, kalai, template, library } = config;
+    const rng = makeRng(config.seed || 1);
+    const maxDifficulty = config.maxDifficulty || 5;
+    const targetDifficulty = config.targetDifficulty || 3;
+    const avartanaMatras = tala.aksharas * nadai.subdivision * kalai;
+
+    // ---- kuraippu ----
+    if (template.kind === 'kuraippu') {
+      for (let cycles = 1; cycles <= 8; cycles++) {
+        const target = avartanaMatras * cycles;
+        const landing = computeLandingUnits(config.eduppuAksharas, nadai, kalai);
+        const body = target - landing;
+        if (body < 4) continue;
+        const lengths = kuraippuLengths(body);
+        const slot = template.slots[0];
+        const segs = [];
+        let fail = false;
+        for (const len of lengths) {
+          const cells = fillSegment(len, slot, library, nadai.id, maxDifficulty, targetDifficulty, rng);
+          if (!cells) { fail = true; break; }
+          segs.push({ slotId: slot.id, label: slot.label, cells, matras: len });
+        }
+        if (fail) continue;
+        const landingCell = pickLanding(library, landing, nadai.id, rng);
+        if (!landingCell) continue;
+        const res = buildResolution({
+          config, template, avartanas: cycles, segments: segs, repetitions: 1,
+          landingCell, pad: 0, nadai, tala, rng, landingMode: 'eduppu',
+        });
+        const v = validateResolution(res, { tala, nadai });
+        if (v.ok) return { ok: true, resolution: res };
+      }
+      return { ok: false, error: 'No valid kuraippu fits this tala/nadai/kalai at the chosen difficulty.' };
+    }
+
+    // ---- faran (cross-rhythm macro cells) ----
+    if (template.kind === 'faran') {
+      const macros = library.cells.filter(
+        (c) => c.function === 'MACRO' && c.usableNadais.includes(nadai.id) && c.difficulty <= maxDifficulty
+      );
+      for (let cycles = 1; cycles <= 8; cycles++) {
+        const target = avartanaMatras * cycles;
+        const landing = 0; // farans resolve on sam; the macro cycle supplies its own landing
+        const body = target - landing;
+        for (const m of shuffled(macros, rng)) {
+          if (m.matraCount > body || body % m.matraCount !== 0) continue;
+          const reps = body / m.matraCount;
+          const segs = [];
+          for (let i = 0; i < reps; i++) {
+            segs.push({ slotId: 'F', label: 'Faran cell', cells: [m], matras: m.matraCount });
+          }
+          const res = buildResolution({
+            config, template, avartanas: cycles, segments: segs, repetitions: 1,
+            landingCell: null, pad: 0, nadai, tala, rng, landingMode: 'none',
+          });
+          const v = validateResolution(res, { tala, nadai });
+          if (v.ok) return { ok: true, resolution: res };
+        }
+      }
+      return { ok: false, error: 'No faran cell divides this cycle length evenly. Try another cycles count or nadai.' };
+    }
+
+    // ---- standard / auto-avartanas templates ----
+    let avartanas = config.avartanas;
+    const auto = template.autoAvartanas || avartanas === 'auto';
+    if (auto) avartanas = 'auto';
+
+    const landingMode = template.landingMode || 'eduppu';
+    const order = templateOrder(template);
+    const occurrences = {};
+    let fixedTotal = 0;
+    for (const st of order) {
+      if (st.fixed) {
+        const c = library.cells.find((x) => x.id === st.fixed);
+        fixedTotal += c ? c.matraCount : 0;
+      } else occurrences[st.slotId] = (occurrences[st.slotId] || 0) + 1;
+    }
+    const variableSlots = template.slots.filter((s) => !s.fixedCell);
+
+    // Landing-length candidates. With a real eduppu the landing length is
+    // strictly determined. At samam the ending may be 1/2/3 units ("tham",
+    // "tha tham", "tha ka tham") — the solver picks whichever lets the three
+    // (or n) phrases divide the cycle exactly, as musicians do in practice.
+    let landingCandidates = [0];
+    if (landingMode === 'eduppu') {
+      const preferred = computeLandingUnits(config.eduppuAksharas, nadai, kalai);
+      if (config.eduppuAksharas > 0) {
+        landingCandidates = [preferred];
+      } else {
+        const sizes = [...new Set(
+          library.cells
+            .filter((c) => c.function === 'LANDING' && c.usableNadais.includes(nadai.id))
+            .map((c) => c.matraCount)
+        )];
+        sizes.sort((a, b) => Math.abs(a - preferred) - Math.abs(b - preferred));
+        landingCandidates = sizes.length ? sizes : [preferred];
+      }
+    }
+
+    const attempts = auto ? [1, 2, 3, 4, 5, 6, 7, 8] : [avartanas];
+    for (const cycles of attempts) {
+      const target = avartanaMatras * cycles;
+      for (const L of landingCandidates) {
+        const bodyRemaining = target - L - fixedTotal;
+        if (bodyRemaining < 0) continue;
+        const structures = enumerateStructures({
+          template, variableSlots, bodyRemaining, occurrences, avartanaMatras, rng,
+        });
+        const withPad = structures
+          .map((lens) => {
+            const sum = variableSlots.reduce((s, sl) => s + (occurrences[sl.id] || 1) * lens[sl.id], 0);
+            return { lens, pad: bodyRemaining - sum };
+          })
+          .filter((x) => (auto ? x.pad >= 0 && x.pad < avartanaMatras : x.pad === 0))
+          .sort((a, b) => a.pad - b.pad);
+        for (const { lens, pad } of withPad) {
+          const filled = {};
+          let fail = false;
+          for (const slot of variableSlots) {
+            if (filled[slot.id]) continue;
+            const cells = fillSegment(lens[slot.id], slot, library, nadai.id, maxDifficulty, targetDifficulty, rng);
+            if (!cells) { fail = true; break; }
+            filled[slot.id] = { slotId: slot.id, label: slot.label, cells, matras: lens[slot.id] };
+          }
+          if (fail) continue;
+
+          const segs = order.map((st) => {
+            if (st.fixed) {
+              const c = library.cells.find((x) => x.id === st.fixed);
+              return { slotId: st.slotId, label: st.label, cells: [c], matras: c.matraCount, fixed: true };
+            }
+            return { ...filled[st.slotId] };
+          });
+
+          const landingCell = L > 0 ? pickLanding(library, L, nadai.id, rng) : null;
+          if (L > 0 && !landingCell) continue;
+
+          const res = buildResolution({
+            config, template, avartanas: cycles, segments: segs, repetitions: 1,
+            landingCell, pad, nadai, tala, rng, landingMode,
+          });
+          const v = validateResolution(res, { tala, nadai });
+          if (v.ok) return { ok: true, resolution: res };
+        }
+      }
+    }
+    return {
+      ok: false,
+      error:
+        'No exact fit for this tala/nadai/kalai/template combination. ' +
+        'Try a different number of cycles (or Auto), another template, or a lower difficulty.',
+    };
+  }
+
+  // Expand a template into an ordered list of steps {slotId,label,fixed?}
+  function templateOrder(template) {
+    const steps = [];
+    if (template.id === 'mohra_korvai') {
+      for (let r = 0; r < 3; r++) {
+        for (const s of ['A', 'A', 'A', 'B']) steps.push({ slotId: s });
+      }
+      for (let r = 0; r < 3; r++) steps.push({ slotId: 'C', fixed: 'c_thathaiatham' });
+      for (let r = 0; r < 3; r++) steps.push({ slotId: 'X' });
+    } else if (template.id === 'tirmana') {
+      for (let r = 0; r < 3; r++) steps.push({ slotId: 'T3' });
+      for (let r = 0; r < 3; r++) steps.push({ slotId: 'T4' });
+      for (let r = 0; r < 3; r++) steps.push({ slotId: 'T5' });
+    } else if (template.id === 'gap_korvai') {
+      steps.push({ slotId: 'X' }, { slotId: 'G' }, { slotId: 'X' }, { slotId: 'G' }, { slotId: 'X' });
+    } else {
+      const reps = template.repetitions || 1;
+      const ids = template.slots.map((s) => s.id);
+      for (let r = 0; r < reps; r++) for (const id of ids) steps.push({ slotId: id });
+    }
+    // attach labels + fixed
+    const byId = {};
+    template.slots.forEach((s) => (byId[s.id] = s));
+    return steps.map((st) => ({
+      ...st,
+      label: byId[st.slotId] ? byId[st.slotId].label : st.slotId,
+      fixed: st.fixed || (byId[st.slotId] && byId[st.slotId].fixedCell) || null,
+    }));
+  }
+
+  // Enumerate feasible slot-length maps. The expansion order of a template may
+  // repeat slots (gap korvai = X G X G X), so the equation is
+  //   Σ occurrences(slot) * length(slot) + fixedTotal = bodyRemaining  (exact)
+  // or ≤ bodyRemaining (auto/pad mode). Honors staircase & multipleOf.
+  function enumerateStructures({ template, variableSlots, bodyRemaining, occurrences, avartanaMatras }) {
+    const results = [];
+    const n = variableSlots.length;
+    if (!n) return bodyRemaining >= 0 ? [{}] : [];
+    const stair = template.staircase || 0;
+    const multipleOfAv = template.multipleOf === 'avartana';
+
+    function rec(i, remaining, acc, sum) {
+      if (results.length >= 60) return;
+      if (i === n) { results.push({ lens: { ...acc }, sum }); return; }
+      const slot = variableSlots[i];
+      const occ = occurrences[slot.id] || 1;
+      let lo = Math.max(1, slot.minMatra || 1);
+      let hi = Math.min(slot.maxMatra || 64, Math.floor(remaining / occ));
+      if (hi < lo) return;
+      if (stair && i > 0) lo = Math.max(lo, acc[variableSlots[i - 1].id] + stair);
+      if (multipleOfAv) {
+        lo = Math.max(lo, avartanaMatras);
+        hi = hi - (hi % avartanaMatras);
+        if (hi < lo) return;
+      }
+      const aim = bodyRemaining / Math.max(1, n - i);
+      const candidates = [];
+      for (let v = lo; v <= hi; v++) {
+        if (multipleOfAv && v % avartanaMatras !== 0) continue;
+        candidates.push(v);
+      }
+      candidates.sort((a, b) => Math.abs(a - aim) - Math.abs(b - aim));
+      for (const v of candidates) {
+        acc[slot.id] = v;
+        rec(i + 1, remaining - occ * v, acc, sum + occ * v);
+        delete acc[slot.id];
+      }
+    }
+    rec(0, bodyRemaining, {}, 0);
+    return results.map((r) => r.lens);
+  }
+
+  /* ---------- resolution object ---------- */
+  function buildResolution({ config, template, avartanas, segments, repetitions, landingCell, pad, nadai, tala, rng, landingMode }) {
+    const landing = landingCell ? landingCell.matraCount : 0;
+    return {
+      id: 'k' + Date.now().toString(36) + Math.floor(rng() * 1e6).toString(36),
+      config: {
+        talaId: tala.id, talaName: tala.name, jati: tala.jati, nadaiId: nadai.id, nadaiName: nadai.name,
+        kalai: config.kalai, eduppuAksharas: config.eduppuAksharas || 0,
+        avartanas, templateId: template.id, templateName: template.name,
+        seed: config.seed || 1, maxDifficulty: config.maxDifficulty || 5,
+        targetDifficulty: config.targetDifficulty || 3,
+        landingMode: landingMode || template.landingMode || 'eduppu',
+      },
+      template,
+      segments,           // [{slotId,label,cells,matras,fixed?}]
+      repetitions,
+      landingCell,
+      landing,
+      pad,                // front kaarvai (matras)
+      totalMatras: pad + segments.reduce((s, x) => s + x.matras, 0) + landing,
+      source: 'engine',
+      generatedAt: new Date().toISOString(),
+    };
+  }
+
+  /* ---------- THE VALIDATOR (single source of truth) ---------- */
+  // Re-derives every count from the resolution itself. Any AI output or
+  // remix result must pass this. No exceptions.
+  function validateResolution(res, opts) {
+    opts = opts || {};
+    const errors = [];
+    const cfg = res.config;
+
+    function err(m) { errors.push(m); }
+
+    // recompute tala from ids stored in the resolution? engine-only res carries config;
+    // the caller supplies library lookups via opts.tala/nadai when re-validating.
+    const tala = opts.tala || null;
+    const nadai = opts.nadai || null;
+
+    if (!Array.isArray(res.segments)) err('segments missing');
+    let segTotal = 0;
+    (res.segments || []).forEach((seg, i) => {
+      let segMatras = 0;
+      (seg.cells || []).forEach((c) => {
+        // cell internal consistency
+        const dur = (c.durations || []).reduce((a, b) => a + b, 0);
+        if (dur !== c.matraCount) err(`segment ${i + 1}: cell ${c.id} durations (${dur}) != matraCount (${c.matraCount})`);
+        if ((c.syllables || []).length !== (c.durations || []).length)
+          err(`segment ${i + 1}: cell ${c.id} syllables/durations length mismatch`);
+        if (nadai && c.usableNadais && !c.usableNadais.includes(nadai.id))
+          err(`segment ${i + 1}: cell ${c.id} not usable in nadai ${nadai.id}`);
+        segMatras += c.matraCount;
+      });
+      if (segMatras !== seg.matras)
+        err(`segment ${i + 1}: cells sum to ${segMatras} but declared ${seg.matras}`);
+      segTotal += segMatras;
+    });
+
+    const landing = res.landingCell ? res.landingCell.matraCount : 0;
+    if (res.landing !== landing) err(`landing mismatch: declared ${res.landing}, cell gives ${landing}`);
+    if (res.landingCell && nadai && !res.landingCell.usableNadais.includes(nadai.id))
+      err('landing cell not usable in this nadai');
+    if (res.landingCell && res.landingCell.function !== 'LANDING')
+      err('landing cell must have function LANDING');
+
+    const recomputedTotal = (res.pad || 0) + segTotal + landing;
+    if (recomputedTotal !== res.totalMatras)
+      err(`totalMatras declared ${res.totalMatras}, recomputed ${recomputedTotal}`);
+
+    if (tala && nadai) {
+      const avartanaMatras = tala.aksharas * nadai.subdivision * cfg.kalai;
+      if (avartanaMatras * cfg.avartanas !== recomputedTotal)
+        err(
+          `does not fill ${cfg.avartanas} avartanas exactly: needs ${avartanaMatras * cfg.avartanas}, got ${recomputedTotal}`
+        );
+      if ((res.pad || 0) < 0 || (res.pad || 0) >= avartanaMatras) err('front pad out of range');
+      if (cfg.landingMode === 'none' && landing !== 0) err('landingMode none must have no landing cell');
+      if (cfg.eduppuAksharas > 0 && cfg.landingMode !== 'none') {
+        const expect = Math.max(1, Math.round(cfg.eduppuAksharas * nadai.subdivision * cfg.kalai));
+        if (landing !== expect) err(`eduppu ${cfg.eduppuAksharas} requires landing of ${expect}, got ${landing}`);
+      }
+    }
+
+    return { ok: errors.length === 0, errors };
+  }
+
+  /* ---------- rendering helpers ---------- */
+  function segmentSollukattu(seg) {
+    return seg.cells.map((c) => c.syllables.join(' ')).join(' ');
+  }
+  function resolutionSollukattu(res) {
+    const parts = [];
+    if (res.pad > 0) parts.push('— '.repeat(res.pad).trim());
+    res.segments.forEach((seg) => parts.push(segmentSollukattu(seg)));
+    if (res.landingCell) parts.push(res.landingCell.syllables.join(' '));
+    return parts.filter(Boolean).join('  |  ');
+  }
+
+  // Build a flat event timeline (for grid + audio), aligned to matra indices.
+  // tala/nadai needed for akshara mapping.
+  function buildTimeline(res, tala, nadai) {
+    const events = [];
+    let m = 0;
+    const push = (cell, kind, segIndex) => {
+      let local = 0;
+      cell.syllables.forEach((syl, i) => {
+        const dur = cell.durations[i];
+        events.push({
+          matra: m, matras: dur, syllable: syl, weight: cell.weights[i],
+          kind, segIndex, cellId: cell.id,
+        });
+        m += dur; local += dur;
+      });
+      return local;
+    };
+    if (res.pad > 0) {
+      for (let i = 0; i < res.pad; i++) events.push({ matra: m, matras: 1, syllable: '—', weight: 'L', kind: 'pad', segIndex: -1, cellId: 'pad' }), m++;
+    }
+    res.segments.forEach((seg, si) => seg.cells.forEach((c) => push(c, 'segment', si)));
+    if (res.landingCell) push(res.landingCell, 'landing', -2);
+    return { events, totalMatras: m };
+  }
+
+  /* ---------- dance counts (Bharatanatyam layer) ---------- */
+  // Counts are grouped 1..8; each count spans `kalai` aksharas (2-kalai counts
+  // are held twice as long). Returns blocks with the syllables under each count.
+  function danceCounts(res, tala, nadai) {
+    const tl = buildTimeline(res, tala, nadai);
+    const matrasPerAkshara = nadai.subdivision * res.config.kalai;
+    const aksharasPerCount = Math.max(1, res.config.kalai);
+    const matrasPerCount = matrasPerAkshara * aksharasPerCount;
+    const blocks = [];
+    const totalAksharas = Math.ceil(tl.totalMatras / matrasPerAkshara);
+    const counts = Math.ceil(totalAksharas / aksharasPerCount);
+    for (let c = 0; c < counts; c++) {
+      const from = c * matrasPerCount;
+      const to = from + matrasPerCount;
+      const evs = tl.events.filter((e) => e.matra >= from && e.matra < to);
+      blocks.push({
+        count: (c % 8) + 1,
+        isSam: c % 8 === 0,
+        aksharaSpan: [from / matrasPerAkshara, to / matrasPerAkshara],
+        sollukattu: evs.map((e) => e.syllable).join(' '),
+      });
+    }
+    return { countsPerAvartana: tala.aksharas / aksharasPerCount, blocks };
+  }
+
+  /* ---------- adavu suggestions (heuristic, Bharatanatyam layer) ---------- */
+  function suggestAdavus(res, library, nadaiId) {
+    const chars = {};
+    res.segments.forEach((s) => s.cells.forEach((c) => { chars[c.character] = (chars[c.character] || 0) + c.matras; }));
+    const rankedChars = Object.entries(chars).sort((a, b) => b[1] - a[1]).map((x) => x[0]);
+    const adavus = (library.adavus || []).filter(
+      (a) => a.nadais.includes(nadaiId) && a.characters.some((ch) => rankedChars.includes(ch))
+    );
+    return adavus
+      .map((a) => {
+        const charScore = Math.max(...a.characters.map((c) => {
+          const idx = rankedChars.indexOf(c);
+          return idx === -1 ? 0 : rankedChars.length - idx;
+        }));
+        const diffPenalty = Math.abs(a.difficulty - (res.config.targetDifficulty || 3));
+        return { adavu: a, score: charScore - diffPenalty * 0.5 };
+      })
+      .sort((x, y) => y.score - x.score)
+      .slice(0, 4)
+      .map((x) => x.adavu);
+  }
+
+  /* ---------- remix operations (V2 — all deterministic) ---------- */
+  function derivedCell(cell, syllables, durations, rng) {
+    const weights = syllables.map((s) => (/^(tha|thom|tham|tom|nam|tai)/i.test(s) ? 'H' : 'L'));
+    return {
+      ...cell, id: cell.id + '#d' + Math.floor(rng() * 1e5),
+      syllables, durations,
+      matraCount: durations.reduce((a, b) => a + b, 0),
+      weights, derived: true, baseCellId: cell.id,
+    };
+  }
+
+  function mapSegments(res, fn) {
+    return res.segments.map((seg, i) => ({ ...seg, cells: fn(seg.cells.slice(), i, seg) }));
+  }
+
+  const remixOps = {
+    reverse: {
+      label: 'Reverse', desc: 'Play cells (and syllables) backwards within each phrase.',
+      apply(res, ctx) {
+        const rng = makeRng((ctx.seed || 1) + 101);
+        const segments = mapSegments(res, (cells) =>
+          cells.slice().reverse().map((c) => derivedCell(c, c.syllables.slice().reverse(), c.durations.slice().reverse(), rng))
+        );
+        return { ...res, segments, id: res.id + '-rev', source: 'remix:reverse' };
+      },
+    },
+    densify: {
+      label: 'Densify', desc: 'Substitute sparser material with busier cells (same counts).',
+      apply(res, ctx) {
+        const rng = makeRng((ctx.seed || 1) + 202);
+        const lib = ctx.library, nadaiId = res.config.nadaiId;
+        const maxD = Math.min(5, res.config.targetDifficulty + 2);
+        const segments = mapSegments(res, (cells) => {
+          const out = [];
+          for (const c of cells) {
+            if (c.kaarvai || c.function === 'GAP') {
+              // fill the rest with the densest allowed CORE/FILLER cells
+              let remaining = c.matraCount;
+              const slot = { allowedFunctions: ['CORE', 'FILLER'], allowGaps: false };
+              const fill = fillSegment(remaining, slot, lib, nadaiId, maxD, res.config.targetDifficulty + 1, rng, { maxPieces: 4 });
+              if (fill) out.push(...fill); else out.push(c);
+            } else {
+              const alt = lib.cells.filter(
+                (x) => x.matraCount === c.matraCount && x.usableNadais.includes(nadaiId) &&
+                  x.function !== 'LANDING' && x.function !== 'GAP' && x.syllables.length > c.syllables.length &&
+                  x.difficulty <= maxD
+              );
+              if (alt.length && rng() < 0.7) out.push(alt[Math.floor(rng() * alt.length)]);
+              else out.push(c);
+            }
+          }
+          return out;
+        });
+        return { ...res, segments, id: res.id + '-den', source: 'remix:densify' };
+      },
+    },
+    simplify: {
+      label: 'Simplify', desc: 'Substitute busier material with sparser cells and kaarvai (same counts).',
+      apply(res, ctx) {
+        const rng = makeRng((ctx.seed || 1) + 303);
+        const lib = ctx.library, nadaiId = res.config.nadaiId;
+        const segments = mapSegments(res, (cells) =>
+          cells.map((c) => {
+            const alt = lib.cells.filter(
+              (x) => x.matraCount === c.matraCount && x.usableNadais.includes(nadaiId) &&
+                x.function !== 'LANDING' && (x.kaarvai || x.syllables.length < c.syllables.length)
+            );
+            if (alt.length && rng() < 0.75) return alt[Math.floor(rng() * alt.length)];
+            return c;
+          })
+        );
+        return { ...res, segments, id: res.id + '-sim', source: 'remix:simplify' };
+      },
+    },
+    changeEnding: {
+      label: 'Change ending', desc: 'Swap the landing phrase for another of the same length.',
+      apply(res, ctx) {
+        const rng = makeRng((ctx.seed || 1) + 404);
+        const lib = ctx.library;
+        if (!res.landingCell) return { ...res, id: res.id + '-end', source: 'remix:ending' };
+        const alts = lib.cells.filter(
+          (c) => c.function === 'LANDING' && c.matraCount === res.landingCell.matraCount &&
+            c.usableNadais.includes(res.config.nadaiId) && c.id !== res.landingCell.id
+        );
+        if (!alts.length) {
+          // compose a landing from tham/tha units
+          const units = res.landingCell.matraCount;
+          const one = lib.cells.find((c) => c.id === 'c_tham');
+          if (one) {
+            const cells = [];
+            for (let i = 0; i < units; i++) cells.push(one);
+            const merged = derivedCell(one, cells.flatMap((c) => c.syllables), cells.flatMap((c) => c.durations), rng);
+            merged.function = 'LANDING';
+            return { ...res, landingCell: merged, landing: merged.matraCount, id: res.id + '-end', source: 'remix:ending' };
+          }
+          return { ...res, id: res.id + '-end', source: 'remix:ending' };
+        }
+        const pick = alts[Math.floor(rng() * alts.length)];
+        return { ...res, landingCell: pick, landing: pick.matraCount, id: res.id + '-end', source: 'remix:ending' };
+      },
+    },
+    changeSolkattu: {
+      label: 'Keep structure / change solkattu', desc: 'Same phrase lengths, fresh cell choices.',
+      apply(res, ctx) {
+        const rng = makeRng((ctx.seed || 1) + 505);
+        const lib = ctx.library, nadaiId = res.config.nadaiId;
+        const byId = {};
+        res.template.slots.forEach((s) => (byId[s.id] = s));
+        const segments = mapSegments(res, (cells, i, seg) => {
+          const slot = byId[seg.slotId] || { allowedFunctions: ['CORE', 'FILLER', 'TRANSITION'], allowGaps: true };
+          let fill = fillSegment(seg.matras, slot, lib, nadaiId, res.config.maxDifficulty, res.config.targetDifficulty, rng, {
+            firstCellMustDifferFrom: cells[0] && cells[0].id,
+          });
+          if (!fill) fill = cells;
+          return fill;
+        });
+        return { ...res, segments, id: res.id + '-sol', source: 'remix:solkattu' };
+      },
+    },
+    reseed: {
+      label: 'New variation', desc: 'Re-run the solver with a fresh seed (same constraints).',
+      apply(res, ctx) { return res; }, // handled specially in UI via solve()
+    },
+  };
+
+  // changeNadai / changeJathi: full re-solve at new nadai, keeping template & difficulty feel.
+  function resolveWithConfig(res, newConfig, library) {
+    const cfg = {
+      ...newConfig,
+      seed: (newConfig.seed || 1) + 707,
+      library,
+    };
+    return solve(cfg);
+  }
+
+  /* ---------- exports ---------- */
+  const engine = {
+    makeRng, applyJati, totalMatras, computeLandingUnits, clapPattern,
+    fillSegment, kuraippuLengths, pickLanding, solve, templateOrder,
+    enumerateStructures, buildResolution, validateResolution,
+    segmentSollukattu, resolutionSollukattu, buildTimeline,
+    danceCounts, suggestAdavus, remixOps, resolveWithConfig,
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = engine;
+  else root.KorvaiEngine = engine;
+})(typeof self !== 'undefined' ? self : this);
+
+</script>
+<script>
+/* =====================================================================
+ * AI Rhythmic Selector layer (V3) — optional, swappable, never load-bearing.
+ *
+ * The AI's ONLY job: given a template's slots and their matra/character
+ * constraints, propose which rhythmic cells (from the curated library)
+ * fill each slot. It is never asked to do arithmetic and never trusted:
+ * every proposal is re-counted by the engine validator. Failed proposals
+ * are regenerated (max N retries) and then silently replaced by the
+ * deterministic weighted selector.
+ *
+ * Primary backend: KonakolSwaraLLM (sgattup/KonakolSwaraLLM) served
+ * locally via llama.cpp / LM Studio / Ollama (see MODEL_SETUP.md).
+ * ===================================================================== */
+(function (root) {
+  'use strict';
+
+  /* ---------------- prompt in KonakolSwaraLLM's trained format ---------------- */
+  const KONAKOL_SYSTEM =
+    'You are an expert in Carnatic classical music, specializing in Konakol (Solkattu) — ' +
+    'the vocal recitation of rhythmic syllables — and Swara sequence composition. ' +
+    'You can explain Tala theory, compose creative Konakol patterns, generate melodic ' +
+    'Swara sequences, and teach the grammar of South Indian rhythm and melody.';
+
+  function buildPrompt(req) {
+    const { slots, nadaiName, talaName, kalai, targetDifficulty } = req;
+    const lib = req.library.cells
+      .filter((c) => c.function !== 'LANDING')
+      .map((c) => `  ${c.notation} = ${c.matraCount} matra${c.matraCount > 1 ? 's' : ''} (${c.function.toLowerCase()}, ${c.character.toLowerCase()}, difficulty ${c.difficulty})`)
+      .join('\n');
+
+    const slotText = slots
+      .map((s) => `  Slot ${s.id} (${s.label}): exactly ${s.matras} matras.`)
+      .join('\n');
+
+    const question =
+      `Context: ${talaName} tala, ${nadaiName} nadai, ${kalai} kalai.\n\n` +
+      `Available rhythm cells (matra counts are exact):\n${lib}\n\n` +
+      `Task: build a korvai by choosing cells for each slot. Constraints:\n${slotText}\n` +
+      `Aim for difficulty around ${targetDifficulty} of 5 and a musically pleasing mix.\n\n` +
+      `RULES (obey exactly):\n` +
+      `1. For each slot, output ONE LINE: "SLOT <id>: cell1 + cell2 + ..." using the cell notations exactly as listed.\n` +
+      `2. The matra counts of the cells on each line MUST sum to exactly the slot's matras.\n` +
+      `3. Use only the listed cells. No new syllables. No arithmetic in the answer.\n` +
+      `4. Output the slot lines and nothing else.`;
+
+    return `${KONAKOL_SYSTEM}\n\n### Question:\n${question}\n\n### Answer:\n`;
+  }
+
+  /* ---------------- lenient response parsing ---------------- */
+  // Accepts "SLOT A: ta ki ta + ta ka di mi" or "A: takita, takadhimi" forms.
+  function parseProposal(text, library) {
+    const byNotation = {};
+    library.cells.forEach((c) => { byNotation[c.notation.toLowerCase().replace(/[\s,]+/g, '')] = c; });
+    const assignments = {};
+    const lines = String(text || '').split(/\r?\n/);
+    for (const line of lines) {
+      const m = line.match(/^\s*(?:slot\s*)?([A-Za-z0-9_]+)\s*[:\-]\s*(.+)$/i);
+      if (!m) continue;
+      const slotId = m[1].toUpperCase();
+      const rest = m[2];
+      if (/^[a-z]\)/i.test(rest)) continue;
+      const cells = [];
+      const tokens = rest.split(/\+|,|·|\||;/).map((t) => t.trim()).filter(Boolean);
+      for (const tok of tokens) {
+        // strip trailing annotations like "(2 matras)"
+        const clean = tok.replace(/\(.*?\)/g, '').replace(/["'“”]/g, '').trim();
+        const key = clean.toLowerCase().replace(/[\s,×]+/g, '');
+        // exact notation match, or match ignoring separators (takita → ta ki ta)
+        let cell = byNotation[key] || byNotation[clean.toLowerCase().replace(/[\s]+/g, '')];
+        if (!cell) {
+          // try prefix match: "ta ki ta × 4" style repeats
+          const repM = clean.match(/^(.*?)\s*[×x]\s*(\d+)$/i);
+          if (repM) {
+            const base = byNotation[repM[1].toLowerCase().replace(/[\s,]+/g, '')];
+            if (base) { for (let i = 0; i < parseInt(repM[2], 10); i++) cells.push(base); continue; }
+          }
+        }
+        if (cell) cells.push(cell);
+        // unknown tokens are skipped; the validator will reject a wrong sum
+      }
+      if (cells.length) assignments[slotId] = cells;
+    }
+    return assignments;
+  }
+
+  /* ---------------- endpoint clients ---------------- */
+  async function fetchWithTimeout(url, opts, ms) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms || 30000);
+    try {
+      return await fetch(url, { ...opts, signal: ctrl.signal });
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
+  // llama.cpp server (llama-server): POST /completion {prompt, ...} → {content}
+  async function callLlamaCpp(cfg, prompt, opts) {
+    const res = await fetchWithTimeout(
+      cfg.baseUrl.replace(/\/$/, '') + '/completion',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          n_predict: cfg.maxTokens || 400,
+          temperature: cfg.temperature != null ? cfg.temperature : 0.7,
+          stop: ['### Question:', '</s>'],
+        }),
+      },
+      cfg.timeoutMs || 45000
+    );
+    if (!res.ok) throw new Error('llama.cpp HTTP ' + res.status);
+    const j = await res.json();
+    return (j.content || j.response || '').trim();
+  }
+
+  // OpenAI-compatible: LM Studio, Ollama (/v1), vLLM, Groq etc.
+  async function callOpenAi(cfg, prompt, opts) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (cfg.apiKey) headers.Authorization = 'Bearer ' + cfg.apiKey;
+    const body = {
+      model: cfg.model || 'konakolswara-llm',
+      messages: [
+        { role: 'system', content: KONAKOL_SYSTEM },
+        { role: 'user', content: prompt.replace(KONAKOL_SYSTEM, '').replace('### Question:\n', '').replace(/\n\n### Answer:\n?$/, '') },
+      ],
+      temperature: cfg.temperature != null ? cfg.temperature : 0.7,
+      max_tokens: cfg.maxTokens || 400,
+    };
+    const res = await fetchWithTimeout(
+      cfg.baseUrl.replace(/\/$/, '') + '/v1/chat/completions',
+      { method: 'POST', headers, body: JSON.stringify(body) },
+      cfg.timeoutMs || 45000
+    );
+    if (!res.ok) throw new Error('OpenAI-compatible HTTP ' + res.status);
+    const j = await res.json();
+    return ((j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '').trim();
+  }
+
+  /* ---------------- interface ---------------- */
+  class RhythmicSelectorAI {
+    // eslint-disable-next-line class-methods-use-this
+    async proposeCells(/* request */) { throw new Error('not implemented'); }
+  }
+
+  /* Deterministic weighted selector — ALWAYS available, no network. */
+  class DeterministicSelector extends RhythmicSelectorAI {
+    constructor(engine, seed) { super(); this.engine = engine; this.seed = seed || 1; }
+    async proposeCells(req) {
+      const rng = this.engine.makeRng(this.seed);
+      const out = {};
+      for (const slot of req.slots) {
+        const cells = this.engine.fillSegment(
+          slot.matras, slot.constraints, req.library, req.nadaiId,
+          req.maxDifficulty, req.targetDifficulty, rng
+        );
+        if (!cells) return { ok: false, error: 'deterministic fill failed for slot ' + slot.id, source: 'fallback' };
+        out[slot.id] = cells;
+      }
+      return { ok: true, assignments: out, source: 'deterministic' };
+    }
+  }
+
+  /* LLM-backed selector with validate → retry → fallback loop. */
+  class LlmSelector extends RhythmicSelectorAI {
+    constructor(engine, cfg, deterministic) {
+      super();
+      this.engine = engine;
+      this.cfg = cfg || {};
+      this.fallback = deterministic;
+      this.log = [];
+    }
+    _log(level, msg) {
+      this.log.push({ t: new Date().toISOString(), level, msg });
+      if (this.cfg.onLog) this.cfg.onLog(level, msg);
+    }
+    async testConnection() {
+      try {
+        const r = await this._rawCall('Reply with exactly: OK');
+        return { ok: true, sample: String(r).slice(0, 120) };
+      } catch (e) {
+        return { ok: false, error: String(e && e.message || e) };
+      }
+    }
+    async _rawCall(userText) {
+      const cfg = this.cfg;
+      if (cfg.api === 'openai') return callOpenAi(cfg, userText);
+      return callLlamaCpp(cfg, userText);
+    }
+    async proposeCells(req) {
+      const prompt = buildPrompt(req);
+      const maxRetries = this.cfg.maxRetries != null ? this.cfg.maxRetries : 2;
+      let lastErr = '';
+      for (let attempt = 1; attempt <= 1 + maxRetries; attempt++) {
+        try {
+          this._log('info', `asking ${this.cfg.api === 'openai' ? 'OpenAI-compatible' : 'llama.cpp'} endpoint (attempt ${attempt})`);
+          const text = await this._rawCall(prompt);
+          const assignments = parseProposal(text, req.library);
+          const check = this.validateAssignments(assignments, req);
+          if (check.ok) {
+            this._log('ok', `model proposal passed the mathematical validator on attempt ${attempt}`);
+            return { ok: true, assignments, source: 'ai', attempts: attempt, raw: text };
+          }
+          lastErr = check.errors.join('; ');
+          this._log('warn', `proposal rejected by validator: ${lastErr} — regenerating`);
+        } catch (e) {
+          lastErr = String((e && e.message) || e);
+          this._log('warn', `endpoint error: ${lastErr}`);
+        }
+      }
+      this._log('warn', 'falling back to the deterministic selector (output stays mathematically exact)');
+      const fb = await this.fallback.proposeCells(req);
+      return { ...fb, aiError: lastErr, source: 'fallback' };
+    }
+    // Re-derive every count — the single source of truth is the engine.
+    validateAssignments(assignments, req) {
+      const errors = [];
+      for (const slot of req.slots) {
+        const cells = assignments[slot.id];
+        if (!cells || !cells.length) { errors.push(`slot ${slot.id}: no cells proposed`); continue; }
+        const sum = cells.reduce((s, c) => s + c.matraCount, 0);
+        if (sum !== slot.matras) errors.push(`slot ${slot.id}: sums to ${sum}, needs ${slot.matras}`);
+        for (const c of cells) {
+          if (!c.usableNadais.includes(req.nadaiId)) errors.push(`slot ${slot.id}: cell ${c.notation} unusable in ${req.nadaiId}`);
+          if (c.function === 'LANDING' || c.function === 'MACRO') errors.push(`slot ${slot.id}: cell ${c.notation} has forbidden function`);
+        }
+      }
+      return { ok: errors.length === 0, errors };
+    }
+  }
+
+  const ai = { RhythmicSelectorAI, DeterministicSelector, LlmSelector, buildPrompt, parseProposal };
+  if (typeof module !== 'undefined' && module.exports) module.exports = ai;
+  else root.KorvaiAI = ai;
+})(typeof self !== 'undefined' ? self : this);
+
+</script>
+<script>
+/* =====================================================================
+ * Audio renderer — deterministic sample/event synthesis only.
+ * (Guardrail: audio is NEVER AI-generated. Every syllable is a small
+ * synthesized percussion voice scheduled exactly on the tala grid.)
+ * ===================================================================== */
+(function (root) {
+  'use strict';
+
+  let ctx = null;
+  function getCtx() {
+    if (!ctx) {
+      const AC = root.AudioContext || root.webkitAudioContext;
+      ctx = new AC();
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+
+  /* ---------- tiny synth voices ---------- */
+  function noiseBuffer(c) {
+    const len = Math.floor(c.sampleRate * 0.12);
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    return buf;
+  }
+  let _noise = null;
+
+  function snap(t, freq, dur, gain) {
+    const c = ctx;
+    const src = c.createBufferSource();
+    if (!_noise) _noise = noiseBuffer(c);
+    src.buffer = _noise;
+    const bp = c.createBiquadFilter();
+    bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = 1.2;
+    const g = c.createGain();
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    src.connect(bp).connect(g).connect(c.destination);
+    src.start(t); src.stop(t + dur + 0.02);
+  }
+  function ping(t, freq, dur, gain) {
+    const c = ctx;
+    const o = c.createOscillator();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(freq, t);
+    const g = c.createGain();
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+  function drop(t, f0, f1, dur, gain) {
+    const c = ctx;
+    const o = c.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.8);
+    const g = c.createGain();
+    g.gain.setValueAtTime(gain, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(c.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }
+
+  /* ---------- syllable → voice recipe ---------- */
+  const RECIPES = {
+    snapHi:  (t, w) => { snap(t, 3200, 0.045, w === 'H' ? 0.5 : 0.32); ping(t, 2400, 0.03, 0.1); },
+    snap:    (t, w) => { snap(t, 2100, 0.05, w === 'H' ? 0.45 : 0.3); ping(t, 1500, 0.04, 0.12); },
+    snapLo:  (t, w) => { snap(t, 1300, 0.06, w === 'H' ? 0.4 : 0.26); ping(t, 900, 0.05, 0.14); },
+    tomMid:  (t, w) => { drop(t, 230, 150, 0.14, w === 'H' ? 0.5 : 0.34); snap(t, 2600, 0.03, 0.12); },
+    tomLow:  (t, w) => { drop(t, 120, 55, 0.28, w === 'H' ? 0.62 : 0.42); },
+    resonant:(t, w) => { drop(t, 95, 70, 0.3, w === 'H' ? 0.65 : 0.45); ping(t, 190, 0.22, 0.12); },
+  };
+  const SYLLABLE_MAP = {
+    ta: 'snapHi', ka: 'snap', tat: 'snapHi', that: 'snapHi', thit: 'snapHi',
+    dit: 'snapHi', hat: 'snapHi', ki: 'snap', ri: 'snap', ju: 'snapLo', nu: 'snapLo',
+    jo: 'snapLo', yai: 'snap', hi: 'snap', mi: 'snapLo',
+    di: 'snap', dhi: 'snap',
+    tha: 'tomMid', tai: 'tomMid', thai: 'tomMid',
+    thom: 'tomLow', tom: 'tomLow', dhin: 'tomLow',
+    tham: 'resonant', tam: 'resonant', nam: 'resonant',
+  };
+  function playSyllable(syl, t, weight) {
+    if (!syl || syl === '—' || syl === '-') return;
+    const recipe = SYLLABLE_MAP[syl.toLowerCase()];
+    if (recipe) RECIPES[recipe](t, weight);
+    else RECIPES.snap(t, weight);
+  }
+  function tick(t, accent) {
+    ping(t, accent ? 1660 : 1100, accent ? 0.09 : 0.05, accent ? 0.3 : 0.14);
+  }
+
+  /* ---------- scheduler ---------- */
+  const S = {
+    playing: false,
+    timer: null,
+    events: [],      // {time, syl, weight, kind, matra}
+    meta: null,      // {matraDur, totalMatras, loops, loopDur, bpm, metronome, matrasPerAkshara, claps: []}
+    startTime: 0,
+    onEvent: null,   // (matra, event|null, time) visual callback
+    onStop: null,
+  };
+
+  function schedule() {
+    const c = getCtx();
+    const horizon = c.currentTime + 0.18;
+    while (S.idx < S.events.length && S.events[S.idx].time < horizon) {
+      const e = S.events[S.idx];
+      if (e.syl) playSyllable(e.syl, e.time, e.weight);
+      else if (e.metronome) tick(e.time, e.accent);
+      S.idx++;
+    }
+    if (S.idx >= S.events.length) {
+      // all scheduled; wait out the tail then stop callback
+      const tail = S.events.length ? S.events[S.events.length - 1].time : 0;
+      if (c.currentTime > tail + 0.4) { S.stop(); }
+    }
+  }
+
+  S.stop = function () {
+    S.playing = false;
+    if (S.timer) { clearInterval(S.timer); S.timer = null; }
+    if (S.onStop) S.onStop();
+  };
+
+  // timeline: from engine.buildTimeline; tala/nadai for akshara mapping.
+  S.play = function (timeline, opts) {
+    opts = opts || {};
+    const c = getCtx();
+    S.stop();
+    const bpm = opts.bpm || 60;
+    const kalai = opts.kalai || 1;
+    const subdivision = opts.subdivision || 4;
+    const matraDur = 60 / (bpm * subdivision * kalai);
+    const matrasPerAkshara = subdivision * kalai;
+    const loopDur = timeline.totalMatras * matraDur;
+    const loops = opts.loops || 1;
+
+    const events = [];
+    for (let l = 0; l < loops; l++) {
+      const base = c.currentTime + 0.25 + l * loopDur;
+      timeline.events.forEach((e) => {
+        events.push({
+          time: base + e.matra * matraDur,
+          syl: e.syllable, weight: e.weight, kind: e.kind, matra: e.matra,
+        });
+      });
+      if (opts.metronome) {
+        const aksharas = Math.ceil(timeline.totalMatras / matrasPerAkshara);
+        for (let a = 0; a < aksharas; a++) {
+          const isSam = a % opts.aksharasPerAvartana === 0;
+          events.push({ time: base + a * matrasPerAkshara * matraDur, metronome: true, accent: isSam });
+        }
+      }
+    }
+    events.sort((x, y) => x.time - y.time);
+    S.events = events;
+    S.idx = 0;
+    S.meta = { matraDur, totalMatras: timeline.totalMatras, loopDur, bpm, startTime: c.currentTime + 0.25 };
+    S.playing = true;
+    S.timer = setInterval(schedule, 30);
+    schedule();
+    return S;
+  };
+
+  // current position in matras (for UI highlight)
+  S.currentMatra = function () {
+    if (!S.playing || !S.meta) return -1;
+    const c = getCtx();
+    const elapsed = c.currentTime - S.meta.startTime;
+    if (elapsed < 0) return 0;
+    return elapsed / S.meta.matraDur;
+  };
+
+  const audio = { play: S.play.bind(S), stop: S.stop.bind(S), get playing() { return S.playing; }, currentMatra: S.currentMatra.bind(S), scheduler: S, playSyllable, getCtx };
+  if (typeof module !== 'undefined' && module.exports) module.exports = audio;
+  else root.KorvaiAudio = audio;
+})(typeof self !== 'undefined' ? self : this);
+
+</script>
+<script>
+/* =====================================================================
+ * Korvai Composer — UI (vanilla JS, no frameworks)
+ * ===================================================================== */
+(function () {
+  'use strict';
+  const E = window.KorvaiEngine;
+  const A = window.KorvaiAI;
+  const AU = window.KorvaiAudio;
+  const SEED = window.KORVAI_SEED;
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, html) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- safe storage (sandboxed preview may block localStorage) ---------- */
+  const mem = {};
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? (k in mem ? mem[k] : d) : JSON.parse(v); } catch (e) { return k in mem ? mem[k] : d; } },
+    set(k, v) { mem[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* in-memory only */ } },
+  };
+
+  /* ---------- state ---------- */
+  const state = {
+    library: SEED,
+    talaId: 'adi', jatiId: 'chaturasra', nadaiId: 'chaturasra', kalai: 1,
+    eduppuId: 'samam', avartanas: 2, templateId: 'korvai_crescendo',
+    maxDifficulty: 5, targetDifficulty: 3, seed: Math.floor(Math.random() * 9999) + 1,
+    resolution: null,
+    history: store.get('korvai.history', []),
+    aiCfg: store.get('korvai.ai', { api: 'llamacpp', baseUrl: 'http://127.0.0.1:8080', model: 'konakolswara-llm', temperature: 0.7, maxRetries: 2 }),
+    bpm: 60, metronome: true, loops: 1,
+    lastVariations: [],
+  };
+
+  const byId = (arr, id) => arr.find((x) => x.id === id);
+
+  function currentTala() {
+    return E.applyJati(byId(state.library.talas, state.talaId), state.jatiId, state.library.jatis);
+  }
+  function currentNadai() { return byId(state.library.nadais, state.nadaiId); }
+  function currentTemplate() { return byId(state.library.templates, state.templateId); }
+  function currentEduppu() { return byId(state.library.eduppus, state.eduppuId); }
+
+  /* ---------- config panel ---------- */
+  function buildSelectors() {
+    const talaSel = $('tala');
+    state.library.talas.forEach((t) => {
+      const o = el('option', null, `${esc(t.name)} · ${t.aksharas} aksharas`);
+      o.value = t.id; talaSel.appendChild(o);
+    });
+    talaSel.value = state.talaId;
+    talaSel.onchange = () => { state.talaId = talaSel.value; syncJatiOptions(); updateMathPreview(); };
+
+    const jatiSel = $('jati');
+    const syncJatiOptions = () => {
+      const tala = byId(state.library.talas, state.talaId);
+      const hasLaghu = tala.angas.some((a) => a.type === 'laghu');
+      jatiSel.innerHTML = '';
+      state.library.jatis.forEach((j) => {
+        const o = el('option', null, esc(j.name + (hasLaghu ? ` (laghu ${j.laghu})` : ' (n/a — chapu)')));
+        o.value = j.id; jatiSel.appendChild(o);
+      });
+      jatiSel.value = state.jatiId;
+      jatiSel.disabled = !hasLaghu;
+      if (!hasLaghu) jatiSel.value = byId(state.library.talas, state.talaId).jati;
+    };
+    syncJatiOptions();
+    jatiSel.onchange = () => { state.jatiId = jatiSel.value; updateMathPreview(); };
+
+    const nadaiSel = $('nadai');
+    state.library.nadais.forEach((n) => {
+      const o = el('option', null, `${esc(n.name)} (${n.subdivision})`);
+      o.value = n.id; nadaiSel.appendChild(o);
+    });
+    nadaiSel.value = state.nadaiId;
+    nadaiSel.onchange = () => { state.nadaiId = nadaiSel.value; updateMathPreview(); };
+
+    const kalaiSel = $('kalai');
+    [1, 2, 4].forEach((k) => { const o = el('option', null, k + ' kalai' + (k > 1 ? ' (slow)' : '')); o.value = k; kalaiSel.appendChild(o); });
+    kalaiSel.value = state.kalai;
+    kalaiSel.onchange = () => { state.kalai = parseInt(kalaiSel.value, 10); syncCycles(); updateMathPreview(); };
+
+    const eduppuSel = $('eduppu');
+    state.library.eduppus.forEach((x) => { const o = el('option', null, esc(x.name)); o.value = x.id; eduppuSel.appendChild(o); });
+    eduppuSel.value = state.eduppuId;
+    eduppuSel.onchange = () => { state.eduppuId = eduppuSel.value; updateMathPreview(); };
+
+    const tplSel = $('template');
+    state.library.templates.forEach((t) => { const o = el('option', null, esc(t.name)); o.value = t.id; tplSel.appendChild(o); });
+    tplSel.value = state.templateId;
+    tplSel.onchange = () => { state.templateId = tplSel.value; syncCycles(); renderTemplateInfo(); updateMathPreview(); };
+
+    const diffSel = $('difficulty');
+    for (let d = 1; d <= 5; d++) { const o = el('option', null, '★'.repeat(d) + '☆'.repeat(5 - d)); o.value = d; diffSel.appendChild(o); }
+    diffSel.value = state.targetDifficulty;
+    diffSel.onchange = () => { state.targetDifficulty = parseInt(diffSel.value, 10); };
+
+    const cyclesSel = $('cycles');
+    const syncCycles = () => {
+      const tpl = currentTemplate();
+      const auto = !!tpl.autoAvartanas;
+      cyclesSel.innerHTML = '';
+      if (auto) {
+        const o = el('option', null, 'auto'); o.value = 'auto'; cyclesSel.appendChild(o);
+        cyclesSel.value = 'auto'; state.avartanas = 'auto';
+      } else {
+        for (let c = 1; c <= 8; c++) { const o = el('option', null, c + (c === 1 ? ' cycle' : ' cycles')); o.value = c; cyclesSel.appendChild(o); }
+        cyclesSel.value = String(state.avartanas === 'auto' ? 2 : state.avartanas);
+        state.avartanas = parseInt(cyclesSel.value, 10);
+      }
+      cyclesSel.disabled = auto;
+    };
+    syncCycles();
+    cyclesSel.onchange = () => { state.avartanas = cyclesSel.value === 'auto' ? 'auto' : parseInt(cyclesSel.value, 10); updateMathPreview(); };
+
+    $('seed').value = state.seed;
+    $('seed').oninput = () => { state.seed = parseInt($('seed').value, 10) || 1; };
+    $('dice').onclick = () => { state.seed = Math.floor(Math.random() * 9999) + 1; $('seed').value = state.seed; };
+
+    $('generate').onclick = () => generate(false);
+    $('generateAi').onclick = () => generate(true);
+    $('variations10').onclick = () => generateVariations(10);
+
+    $('bpm').oninput = () => { state.bpm = parseInt($('bpm').value, 10); $('bpmVal').textContent = state.bpm; };
+    $('bpm').value = state.bpm; $('bpmVal').textContent = state.bpm;
+    $('metronome').onchange = () => { state.metronome = $('metronome').checked; };
+    $('loops').onchange = () => { state.loops = parseInt($('loops').value, 10); };
+    $('play').onclick = playCurrent;
+    $('stop').onclick = () => AU.stop();
+
+    renderTemplateInfo();
+  }
+
+  function renderTemplateInfo() {
+    const t = currentTemplate();
+    $('templateInfo').innerHTML = `<strong>${esc(t.name)}</strong> — ${esc(t.structure)}<br><span class="muted">${esc(t.description)}</span>`;
+  }
+
+  function updateMathPreview() {
+    const tala = currentTala(), nadai = currentNadai();
+    const av = state.avartanas === 'auto' ? '(auto)' : state.avartanas;
+    const m = E.totalMatras(tala, nadai, state.kalai, 1);
+    $('mathPreview').innerHTML =
+      `<b>${esc(tala.name)}</b> ${tala.aksharas} aksharas × <b>${esc(nadai.name)}</b> ${nadai.subdivision} × ${state.kalai} kalai = ` +
+      `<b>${m} matras</b> / avartana${av === '(auto)' ? '' : ` → total <b>${m * state.avartanas}</b> for ${av} cycle(s)`}`;
+  }
+
+  /* ---------- generate ---------- */
+  function solveConfig(overrides) {
+    return {
+      tala: currentTala(), nadai: currentNadai(), kalai: state.kalai,
+      eduppuAksharas: currentEduppu().aksharas,
+      avartanas: state.avartanas, template: currentTemplate(), library: state.library,
+      seed: state.seed, maxDifficulty: state.maxDifficulty, targetDifficulty: state.targetDifficulty,
+      ...overrides,
+    };
+  }
+
+  function generate(useAi, opts) {
+    opts = opts || {};
+    const cfg = solveConfig(opts.cfg);
+    const out = E.solve(cfg);
+    if (!out.ok) { showError(out.error); return null; }
+    const res = out.resolution;
+    const v = E.validateResolution(res, { tala: cfg.tala, nadai: cfg.nadai });
+    if (!v.ok) { showError('Internal validation failed (should never happen): ' + v.errors.join('; ')); return null; }
+    state.resolution = res;
+    pushHistory(res);
+    renderAll();
+    if (typeof $('summary').scrollIntoView === 'function') {
+      $('summary').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    return res;
+  }
+
+  function generateVariations(n) {
+    const cfg0 = solveConfig();
+    const out0 = E.solve(cfg0);
+    if (!out0.ok) { showError(out0.error); return; }
+    const results = [];
+    const seen = new Set([E.resolutionSollukattu(out0.resolution)]);
+    for (let i = 0; i < n * 3 && results.length < n; i++) {
+      const seed = state.seed + 1 + i;
+      const out = E.solve({ ...cfg0, seed });
+      if (!out.ok) continue;
+      const key = E.resolutionSollukattu(out.resolution);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const v = E.validateResolution(out.resolution, { tala: cfg0.tala, nadai: cfg0.nadai });
+      if (!v.ok) continue;
+      results.push(out.resolution);
+    }
+    state.lastVariations = results;
+    state.resolution = out0.resolution;
+    pushHistory(out0.resolution);
+    renderAll();
+    renderVariations(results);
+  }
+
+  /* ---------- AI integration ---------- */
+  // Real async AI generate path
+  async function generateWithAi() {
+    const base = generate(false);
+    if (!base) return;
+    aiLog('info', '— AI pass —');
+    const tpl = currentTemplate();
+    const bySlot = {};
+    base.segments.forEach((s) => {
+      if (!bySlot[s.slotId]) bySlot[s.slotId] = { id: s.slotId, label: s.label, matras: s.matras, constraints: tpl.slots.find((x) => x.id === s.slotId) || {} };
+    });
+    const req = {
+      slots: Object.values(bySlot).map((s) => ({ id: s.id, label: s.label, matras: s.matras, constraints: s.constraints })),
+      nadaiId: state.nadaiId, nadaiName: currentNadai().name, talaName: currentTala().name,
+      kalai: state.kalai, targetDifficulty: state.targetDifficulty, maxDifficulty: state.maxDifficulty,
+      library: state.library,
+    };
+    const det = new A.DeterministicSelector(E, state.seed);
+    const llm = new A.LlmSelector(E, { ...state.aiCfg, onLog: (lvl, msg) => aiLog(lvl, msg) }, det);
+    const t0 = performance.now();
+    const out = await llm.proposeCells(req);
+    const dt = Math.round(performance.now() - t0);
+    if (!out.ok) { aiLog('warn', 'AI failed entirely (' + out.error + ') — keeping engine cells'); return; }
+    if (out.source !== 'ai') { aiLog('warn', `AI unusable after ${dt}ms (${out.aiError || 'validator rejected'}) — keeping engine cells`); return; }
+    // re-validate through the ENGINE validator with a reconstructed resolution
+    const segs = base.segments.map((s) => {
+      const proposed = out.assignments[s.slotId];
+      if (proposed) {
+        const sum = proposed.reduce((a, c) => a + c.matraCount, 0);
+        if (sum === s.matras) return { ...s, cells: proposed };
+      }
+      return s;
+    });
+    const candidate = { ...base, segments: segs, source: 'ai+engine' };
+    const v = E.validateResolution(candidate, { tala: currentTala(), nadai: currentNadai() });
+    if (!v.ok) { aiLog('warn', 'engine validator rejected AI assignment: ' + v.errors.join('; ')); return; }
+    aiLog('ok', `AI cells accepted (${dt}ms, attempt ${out.attempts}) — all counts verified`);
+    state.resolution = candidate;
+    pushHistory(candidate);
+    renderAll();
+  }
+  // rewire the AI button to the async path
+  function bindAiButton() {
+    $('generateAi').onclick = () => generateWithAi();
+  }
+
+  /* ---------- history ---------- */
+  function pushHistory(res) {
+    state.history.unshift({ res, savedAt: new Date().toISOString() });
+    state.history = state.history.slice(0, 40);
+    store.set('korvai.history', state.history);
+    renderHistory();
+  }
+  function renderHistory() {
+    const box = $('historyList');
+    box.innerHTML = '';
+    if (!state.history.length) { box.appendChild(el('div', 'muted', 'No saved korvais yet.')); return; }
+    state.history.forEach((h, i) => {
+      const c = h.res.config;
+      const row = el('div', 'hist-row',
+        `<div><b>${esc(c.templateName)}</b> · ${esc(c.talaName)} · ${esc(c.nadaiName)} · ${c.kalai}k · ${c.avartanas}c · ${h.res.totalMatras}m
+         <span class="badge ${h.res.source && h.res.source.startsWith('ai') ? 'badge-ai' : ''}">${esc(h.res.source || 'engine')}</span></div>
+         <div class="muted small">${esc(h.savedAt.replace('T', ' ').slice(0, 19))}</div>`);
+      row.onclick = () => {
+        state.resolution = h.res;
+        state.talaId = h.res.config.talaId; state.nadaiId = h.res.config.nadaiId; state.kalai = h.res.config.kalai;
+        state.templateId = h.res.config.templateId;
+        renderAll(); syncSelectorsFromState();
+      };
+      box.appendChild(row);
+    });
+  }
+  function syncSelectorsFromState() {
+    $('tala').value = state.talaId; $('nadai').value = state.nadaiId; $('template').value = state.templateId; $('kalai').value = state.kalai;
+    updateMathPreview(); renderTemplateInfo();
+  }
+
+  /* ---------- rendering ---------- */
+  function showError(msg) {
+    $('error').textContent = msg;
+    $('error').style.display = 'block';
+    setTimeout(() => { $('error').style.display = 'none'; }, 6000);
+  }
+
+  function renderAll() {
+    const res = state.resolution;
+    if (!res) return;
+    const tala = E.applyJati(byId(state.library.talas, res.config.talaId), res.config.jati, state.library.jatis);
+    const nadai = byId(state.library.nadais, res.config.nadaiId);
+    const v = E.validateResolution(res, { tala, nadai });
+    $('summary').innerHTML = `
+      <div class="sum-main">
+        <span class="chip">${esc(res.config.talaName)}</span>
+        <span class="chip">${esc(res.config.nadaiName)} nadai</span>
+        <span class="chip">${res.config.kalai} kalai</span>
+        <span class="chip">${res.config.avartanas} avartana${res.config.avartanas > 1 ? 's' : ''}</span>
+        <span class="chip">${esc(res.config.templateName)}</span>
+        <span class="chip strong">${res.totalMatras} matras</span>
+        ${res.pad ? `<span class="chip warn">${res.pad} matra front kaarvai</span>` : ''}
+        <span class="badge ${v.ok ? 'badge-ok' : 'badge-bad'}">${v.ok ? '✓ validated exact' : '✗ ' + esc(v.errors.join('; '))}</span>
+        ${res.source && res.source !== 'engine' ? `<span class="badge badge-ai">${esc(res.source)}</span>` : ''}
+      </div>`;
+    renderGrid(res, tala, nadai);
+    renderSolkattu(res);
+    renderNattuvangam(res, tala, nadai);
+    renderDance(res, tala, nadai);
+    renderRemixRow(res);
+    $('aiRawBox').style.display = 'none';
+  }
+
+  /* ----- tala grid ----- */
+  const SEG_COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#10b981'];
+  function renderGrid(res, tala, nadai) {
+    const wrap = $('grid');
+    wrap.innerHTML = '';
+    const tl = E.buildTimeline(res, tala, nadai);
+    const matrasPerAkshara = nadai.subdivision * res.config.kalai;
+    const claps = E.clapPattern(tala);
+    const CLAP_ICON = { clap: '👏', wave: '👋', count: '•', rest: '·' };
+    const totalMatras = tl.totalMatras;
+    const aksharaCount = Math.ceil(totalMatras / matrasPerAkshara);
+
+    // segment color by segIndex
+    const evColor = (e) => {
+      if (e.kind === 'landing') return '#facc15';
+      if (e.kind === 'pad' || e.syllable === '—') return '#475569';
+      if (e.kind === 'segment') return SEG_COLORS[(e.segIndex + 6) % SEG_COLORS.length];
+      return '#64748b';
+    };
+
+    for (let av = 0; av < res.config.avartanas; av++) {
+      const row = el('div', 'avartana');
+      row.appendChild(el('div', 'av-label', `A${av + 1}`));
+      const aksharasThisAv = Math.min(tala.aksharas, aksharaCount - av * tala.aksharas);
+      for (let ak = 0; ak < aksharasThisAv; ak++) {
+        const aIdx = av * tala.aksharas + ak;
+        const isSam = aIdx % tala.aksharas === 0;
+        const col = el('div', 'akshara' + (isSam ? ' sam' : ''));
+        col.appendChild(el('div', 'ak-top', `<span class="ak-num">${aIdx + 1}</span><span class="ak-clap">${CLAP_ICON[claps[ak].mark]}</span>`));
+        const cellsBox = el('div', 'ak-cells');
+        const from = aIdx * matrasPerAkshara;
+        const to = from + matrasPerAkshara;
+        tl.events.filter((e) => e.matra >= from && e.matra < to).forEach((e) => {
+          const c = el('div', 'm-cell',
+            `<span class="syl">${esc(e.syllable)}</span><span class="w">${e.weight === 'H' ? '●' : '·'}</span>`);
+          c.style.borderLeftColor = evColor(e);
+          c.dataset.matra = e.matra;
+          if (e.weight === 'H') c.classList.add('heavy');
+          if (e.syllable === '—') c.classList.add('kaarvai');
+          cellsBox.appendChild(c);
+        });
+        col.appendChild(cellsBox);
+        row.appendChild(col);
+      }
+      wrap.appendChild(row);
+    }
+  }
+
+  /* ----- sollukattu text ----- */
+  function renderSolkattu(res) {
+    const pre = $('solkattuText');
+    const lines = [];
+    const tala = E.applyJati(byId(state.library.talas, res.config.talaId), res.config.jati, state.library.jatis);
+    const nadai = byId(state.library.nadais, res.config.nadaiId);
+    if (res.pad > 0) lines.push('(kaarvai ' + res.pad + ')  — '.repeat(Math.min(res.pad, 16)).trim());
+    let segIdx = 0;
+    res.segments.forEach((seg, i) => {
+      const isLast = i === res.segments.length - 1;
+      lines.push(`[${esc(seg.label)} · ${seg.matras}]  ` + seg.cells.map((c) => c.syllables.join(' ')).join('   '));
+      if (!isLast && (i + 1) % 3 === 0 && res.segments.length > 3) lines.push('');
+    });
+    if (res.landingCell) lines.push(`[landing · ${res.landing}]  ` + res.landingCell.syllables.join(' '));
+    pre.innerHTML = esc(lines.join('\n'));
+    const cfg = res.config;
+    $('solkattuMeta').innerHTML =
+      `${esc(cfg.talaName)} · ${esc(cfg.nadaiName)} nadai · ${cfg.kalai} kalai · ${cfg.avartanas} avartana(s) · ${res.totalMatras} matras · ` +
+      `${esc(cfg.templateName)} · seed ${cfg.seed}`;
+    $('copySolkattu').onclick = () => {
+      const txt = $('solkattuText').textContent;
+      try { navigator.clipboard.writeText(txt); $('copySolkattu').textContent = 'Copied!'; }
+      catch (e) { $('copySolkattu').textContent = 'Select & copy manually'; }
+      setTimeout(() => { $('copySolkattu').textContent = 'Copy'; }, 1600);
+    };
+    $('dlSolkattu').onclick = () => {
+      const blob = new Blob([$('solkattuText').textContent + '\n\n' + $('solkattuMeta').textContent], { type: 'text/plain' });
+      dl(blob, `korvai-${res.config.templateId}-${res.id}.txt`);
+    };
+    $('dlJson').onclick = () => {
+      const blob = new Blob([JSON.stringify(res, null, 2)], { type: 'application/json' });
+      dl(blob, `korvai-${res.config.templateId}-${res.id}.json`);
+    };
+  }
+  function dl(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  /* ----- nattuvangam view ----- */
+  function renderNattuvangam(res, tala, nadai) {
+    const tl = E.buildTimeline(res, tala, nadai);
+    const matrasPerAkshara = nadai.subdivision * res.config.kalai;
+    const claps = E.clapPattern(tala);
+    const CLAP_NAME = { clap: '👏 clap', wave: '👋 wave', count: '• count', rest: '·' };
+    let html = '<table class="nat-table"><tr><th>Akshara</th><th>Anga</th><th>Kriya</th><th>Sollukattu</th></tr>';
+    for (let a = 0; a < Math.ceil(tl.totalMatras / matrasPerAkshara); a++) {
+      const from = a * matrasPerAkshara;
+      const evs = tl.events.filter((e) => e.matra >= from && e.matra < from + matrasPerAkshara);
+      const anga = tala.angas[claps[a % tala.aksharas].angaIndex];
+      const angaName = { laghu: 'Laghu', dhrutam: 'Dhrutam', anudhrutam: 'Anudhrutam', section: 'Chapu' }[anga.type];
+      const isSam = a % tala.aksharas === 0;
+      html += `<tr class="${isSam ? 'sam-row' : ''}"><td>${a + 1}${isSam ? ' ◉sam' : ''}</td><td>${angaName}</td><td>${CLAP_NAME[claps[a % tala.aksharas].mark]}</td><td class="mono">${esc(evs.map((e) => e.syllable).join(' '))}</td></tr>`;
+    }
+    html += '</table>';
+    html += `<div class="muted small" style="margin-top:8px">Anga layout: ${tala.angas.map((x) => `${x.type === 'laghu' ? 'Laghu' : x.type === 'dhrutam' ? 'Dhrutam' : x.type === 'anudhrutam' ? 'Anudhrutam' : 'Chapu'} ${x.aksharas}`).join(' + ')} = ${tala.aksharas} aksharas/avartana.</div>`;
+    $('nattuvangam').innerHTML = html;
+  }
+
+  /* ----- dance counts + adavus ----- */
+  function renderDance(res, tala, nadai) {
+    const dc = E.danceCounts(res, tala, nadai);
+    let html = '<div class="dance-counts">';
+    dc.blocks.forEach((b) => {
+      html += `<div class="dcount ${b.isSam ? 'sam' : ''}"><div class="dnum">${b.count}${b.isSam ? ' ◉' : ''}</div><div class="dsyl">${esc(b.sollukattu)}</div></div>`;
+    });
+    html += '</div>';
+    const adavus = E.suggestAdavus(res, state.library, res.config.nadaiId);
+    html += '<h3 class="sub">Adavu suggestions</h3><div class="adavus">';
+    adavus.forEach((a) => {
+      html += `<div class="adavu"><div class="ad-name">${esc(a.name)}</div>
+        <div class="ad-sol mono">${esc(a.sollukattu)}</div>
+        <div class="ad-desc">${esc(a.description)}</div>
+        <div class="muted small">${a.counts} counts · difficulty ${a.difficulty}/5</div></div>`;
+    });
+    html += '</div>';
+    html += `<div class="muted small" style="margin-top:8px">Heuristic mapping: phrase character/density → compatible adavus in ${esc(res.config.nadaiName)} nadai. Counts grouped in 8s; ${res.config.kalai > 1 ? `${res.config.kalai}-kalai: each count spans ${res.config.kalai} aksharas.` : 'each count = 1 akshara.'}</div>`;
+    $('dance').innerHTML = html;
+  }
+
+  /* ----- remix row ----- */
+  function renderRemixRow(res) {
+    const row = $('remixRow');
+    row.innerHTML = '';
+    const tala = E.applyJati(byId(state.library.talas, res.config.talaId), res.config.jati, state.library.jatis);
+    const nadai = byId(state.library.nadais, res.config.nadaiId);
+    Object.entries(E.remixOps).forEach(([key, op]) => {
+      if (key === 'reseed') return;
+      const b = el('button', 'btn small', esc(op.label));
+      b.title = op.desc;
+      b.onclick = () => {
+        const remixed = op.apply(res, { seed: state.seed, library: state.library });
+        const v = E.validateResolution(remixed, { tala, nadai });
+        if (!v.ok) { showError('Remix rejected by validator: ' + v.errors.join('; ')); return; }
+        state.resolution = remixed;
+        pushHistory(remixed);
+        renderAll();
+      };
+      row.appendChild(b);
+    });
+    // nadai switch
+    state.library.nadais.filter((n) => n.id !== res.config.nadaiId).forEach((n) => {
+      const b = el('button', 'btn small ghost', `→ ${esc(n.name)} nadai`);
+      b.onclick = () => {
+        const out = E.resolveWithConfig(res, {
+          tala: E.applyJati(byId(state.library.talas, res.config.talaId), res.config.jati, state.library.jatis),
+          nadai: n, kalai: res.config.kalai, eduppuAksharas: res.config.eduppuAksharas,
+          avartanas: res.config.avartanas, template: byId(state.library.templates, res.config.templateId),
+          library: state.library, seed: state.seed, maxDifficulty: res.config.maxDifficulty,
+          targetDifficulty: res.config.targetDifficulty,
+        }, state.library);
+        if (!out.ok) { showError('Cannot re-fit this structure in ' + n.name + ' nadai here.'); return; }
+        state.resolution = out.resolution;
+        state.nadaiId = n.id;
+        pushHistory(out.resolution);
+        renderAll(); syncSelectorsFromState();
+      };
+      row.appendChild(b);
+    });
+    const newVar = el('button', 'btn small accent', '↻ New variation');
+    newVar.onclick = () => { state.seed = Math.floor(Math.random() * 9999) + 1; $('seed').value = state.seed; generate(false); };
+    row.appendChild(newVar);
+  }
+
+  /* ----- variations list ----- */
+  function renderVariations(list) {
+    const box = $('variations');
+    box.innerHTML = '';
+    box.appendChild(el('div', 'muted small', `${list.length} validated variations of the same structure — click to load:`));
+    list.forEach((res) => {
+      const line = E.resolutionSollukattu(res);
+      const row = el('div', 'var-row mono', esc(line.length > 130 ? line.slice(0, 130) + '…' : line));
+      row.onclick = () => { state.resolution = res; pushHistory(res); renderAll(); };
+      box.appendChild(row);
+    });
+    box.style.display = 'block';
+  }
+
+  /* ----- AI panel ----- */
+  function aiLog(level, msg) {
+    const box = $('aiLog');
+    const icon = { ok: '✓', warn: '⚠', info: '·' }[level] || '·';
+    const line = el('div', 'ai-line ai-' + level, `<span>${icon}</span> ${esc(msg)}`);
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+  }
+  function bindAiPanel() {
+    const c = state.aiCfg;
+    $('aiApi').value = c.api; $('aiUrl').value = c.baseUrl; $('aiModel').value = c.model;
+    $('aiTemp').value = c.temperature; $('aiTempVal').textContent = c.temperature;
+    const save = () => {
+      state.aiCfg = {
+        api: $('aiApi').value, baseUrl: $('aiUrl').value.trim(), model: $('aiModel').value.trim(),
+        temperature: parseFloat($('aiTemp').value), maxRetries: 2,
+      };
+      store.set('korvai.ai', state.aiCfg);
+    };
+    ['aiApi', 'aiUrl', 'aiModel', 'aiTemp'].forEach((id) => { $(id).onchange = save; });
+    $('aiTemp').oninput = () => { $('aiTempVal').textContent = $('aiTemp').value; };
+    $('aiTest').onclick = async () => {
+      save();
+      aiLog('info', `testing ${state.aiCfg.api} endpoint at ${state.aiCfg.baseUrl} …`);
+      const det = new A.DeterministicSelector(E, 1);
+      const llm = new A.LlmSelector(E, state.aiCfg, det);
+      const r = await llm.testConnection();
+      if (r.ok) aiLog('ok', 'endpoint reachable — sample: ' + r.sample);
+      else aiLog('warn', 'endpoint unreachable (' + r.error + '). The app works fully without it; see MODEL_SETUP.md.');
+    };
+    $('aiPromptPreview').onclick = () => {
+      const res = state.resolution;
+      if (!res) { aiLog('warn', 'generate a korvai first'); return; }
+      const tpl = byId(state.library.templates, res.config.templateId);
+      const bySlot = {};
+      res.segments.forEach((s) => { if (!bySlot[s.slotId]) bySlot[s.slotId] = { id: s.slotId, label: s.label, matras: s.matras, constraints: tpl.slots.find((x) => x.id === s.slotId) || {} }; });
+      const prompt = A.buildPrompt({
+        slots: Object.values(bySlot).map((s) => ({ id: s.id, label: s.label, matras: s.matras })),
+        nadaiName: res.config.nadaiName, talaName: res.config.talaName, kalai: res.config.kalai,
+        targetDifficulty: res.config.targetDifficulty, library: state.library,
+      });
+      $('aiRaw').textContent = prompt;
+      $('aiRawBox').style.display = 'block';
+    };
+  }
+
+  /* ---------- audio ---------- */
+  function playCurrent() {
+    const res = state.resolution;
+    if (!res) { showError('Generate a korvai first.'); return; }
+    const tala = E.applyJati(byId(state.library.talas, res.config.talaId), res.config.jati, state.library.jatis);
+    const nadai = byId(state.library.nadais, res.config.nadaiId);
+    const tl = E.buildTimeline(res, tala, nadai);
+    AU.play(tl, {
+      bpm: state.bpm, kalai: res.config.kalai, subdivision: nadai.subdivision,
+      metronome: state.metronome, loops: state.loops, aksharasPerAvartana: tala.aksharas,
+    });
+    // playback highlight
+    const onStop = () => { document.querySelectorAll('.m-cell.playing').forEach((x) => x.classList.remove('playing')); };
+    AU.scheduler.onStop = onStop;
+    const tickLoop = () => {
+      if (!AU.playing) { onStop(); return; }
+      const m = AU.currentMatra();
+      document.querySelectorAll('.m-cell.playing').forEach((x) => x.classList.remove('playing'));
+      const cur = document.querySelector(`.m-cell[data-matra="${Math.floor(m)}"]`);
+      if (cur) cur.classList.add('playing');
+      requestAnimationFrame(tickLoop);
+    };
+    requestAnimationFrame(tickLoop);
+  }
+
+  /* ---------- tabs ---------- */
+  function bindTabs() {
+    document.querySelectorAll('.tabbar button').forEach((b) => {
+      b.onclick = () => {
+        document.querySelectorAll('.tabbar button').forEach((x) => x.classList.remove('active'));
+        document.querySelectorAll('.tabpane').forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        $(b.dataset.pane).classList.add('active');
+      };
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function boot() {
+    buildSelectors();
+    bindAiPanel();
+    bindTabs();
+    bindAiButton();
+    renderHistory();
+    updateMathPreview();
+    aiLog('info', 'Engine ready — deterministic mode (no AI required).');
+    aiLog('info', 'AI layer: configure a local KonakolSwaraLLM endpoint in this tab (llama.cpp / LM Studio / Ollama). See MODEL_SETUP.md.');
+    // first render
+    generate(false);
+  }
+  document.addEventListener('DOMContentLoaded', boot);
+})();
+
+</script>
+</body>
+</html>

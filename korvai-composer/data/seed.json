@@ -1,0 +1,2187 @@
+{
+  "schemaVersion": 1,
+  "talas": [
+    {
+      "id": "adi",
+      "name": "Adi",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        }
+      ],
+      "aksharas": 8
+    },
+    {
+      "id": "rupaka",
+      "name": "Rupaka",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 6
+    },
+    {
+      "id": "tisra_triputa",
+      "name": "Tisra Triputa",
+      "jati": "Tisra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 3
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        }
+      ],
+      "aksharas": 7
+    },
+    {
+      "id": "khanda_chapu",
+      "name": "Khanda Chapu",
+      "jati": "Khanda",
+      "angas": [
+        {
+          "type": "section",
+          "aksharas": 2
+        },
+        {
+          "type": "section",
+          "aksharas": 3
+        }
+      ],
+      "aksharas": 5
+    },
+    {
+      "id": "misra_chapu",
+      "name": "Misra Chapu",
+      "jati": "Misra",
+      "angas": [
+        {
+          "type": "section",
+          "aksharas": 3
+        },
+        {
+          "type": "section",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 7
+    },
+    {
+      "id": "eka",
+      "name": "Eka",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 4
+    },
+    {
+      "id": "matya",
+      "name": "Matya",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 10
+    },
+    {
+      "id": "ata",
+      "name": "Ata",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        }
+      ],
+      "aksharas": 12
+    },
+    {
+      "id": "dhruva",
+      "name": "Dhruva",
+      "jati": "Chaturasra",
+      "angas": [
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "dhrutam",
+          "aksharas": 2
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        },
+        {
+          "type": "laghu",
+          "aksharas": 4
+        }
+      ],
+      "aksharas": 14
+    }
+  ],
+  "jatis": [
+    {
+      "id": "tisra",
+      "name": "Tisra",
+      "laghu": 3
+    },
+    {
+      "id": "chaturasra",
+      "name": "Chaturasra",
+      "laghu": 4
+    },
+    {
+      "id": "khanda",
+      "name": "Khanda",
+      "laghu": 5
+    },
+    {
+      "id": "misra",
+      "name": "Misra",
+      "laghu": 7
+    },
+    {
+      "id": "sankirna",
+      "name": "Sankirna",
+      "laghu": 9
+    }
+  ],
+  "nadais": [
+    {
+      "id": "tisra",
+      "name": "Tisra",
+      "subdivision": 3
+    },
+    {
+      "id": "chaturasra",
+      "name": "Chaturasra",
+      "subdivision": 4
+    },
+    {
+      "id": "khanda",
+      "name": "Khanda",
+      "subdivision": 5
+    },
+    {
+      "id": "misra",
+      "name": "Misra",
+      "subdivision": 7
+    },
+    {
+      "id": "sankirna",
+      "name": "Sankirna",
+      "subdivision": 9
+    }
+  ],
+  "eduppus": [
+    {
+      "id": "samam",
+      "name": "Samam",
+      "aksharas": 0
+    },
+    {
+      "id": "arai",
+      "name": "1/2 akshara",
+      "aksharas": 0.5
+    },
+    {
+      "id": "idu",
+      "name": "1 akshara",
+      "aksharas": 1
+    },
+    {
+      "id": "idiyam",
+      "name": "1 1/2 akshara",
+      "aksharas": 1.5
+    },
+    {
+      "id": "randam",
+      "name": "2 aksharas",
+      "aksharas": 2
+    }
+  ],
+  "cells": [
+    {
+      "id": "c_ta",
+      "notation": "ta",
+      "syllables": [
+        "ta"
+      ],
+      "durations": [
+        1
+      ],
+      "matraCount": 1,
+      "weights": [
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_taka",
+      "notation": "ta ka",
+      "syllables": [
+        "ta",
+        "ka"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "L",
+        "L"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_takita",
+      "notation": "ta ki ta",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takadimi",
+      "notation": "ta ka di mi",
+      "syllables": [
+        "ta",
+        "ka",
+        "di",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takajonu",
+      "notation": "ta ka jo nu",
+      "syllables": [
+        "ta",
+        "ka",
+        "jo",
+        "nu"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "STRAIGHT",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_thakadhimi",
+      "notation": "tha ka dhi mi",
+      "syllables": [
+        "tha",
+        "ka",
+        "dhi",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_tarikita",
+      "notation": "ta ri ki ta",
+      "syllables": [
+        "ta",
+        "ri",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_dhimithaka",
+      "notation": "dhi mi ta ka",
+      "syllables": [
+        "dhi",
+        "mi",
+        "ta",
+        "ka"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "L",
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_kitataka",
+      "notation": "ki ta ta ka",
+      "syllables": [
+        "ki",
+        "ta",
+        "ta",
+        "ka"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "H",
+        "L",
+        "L"
+      ],
+      "character": "SQUARE",
+      "function": "FILLER",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takatakita",
+      "notation": "ta ka ta ki ta",
+      "syllables": [
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 5,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "khanda"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_taditakajonu",
+      "notation": "ta di ta ka jo nu",
+      "syllables": [
+        "ta",
+        "di",
+        "ta",
+        "ka",
+        "jo",
+        "nu"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "STRAIGHT",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_thakatharikita",
+      "notation": "tha ka tha ri ki ta",
+      "syllables": [
+        "tha",
+        "ka",
+        "tha",
+        "ri",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takita_x2",
+      "notation": "ta ki ta ta ki ta",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "FILLER",
+      "usableNadais": [
+        "tisra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_takadimi_x2",
+      "notation": "ta ka dhi mi tha ka dhi mi",
+      "syllables": [
+        "ta",
+        "ka",
+        "dhi",
+        "mi",
+        "tha",
+        "ka",
+        "dhi",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 8,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takajonu_thakadhimi",
+      "notation": "ta ka jo nu tha ka dhi mi",
+      "syllables": [
+        "ta",
+        "ka",
+        "jo",
+        "nu",
+        "tha",
+        "ka",
+        "dhi",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 8,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "STRAIGHT",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "mohra"
+      ]
+    },
+    {
+      "id": "c_takitatakadimi",
+      "notation": "ta ki ta ta ka di mi",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 7,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "misra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takadimitakita",
+      "notation": "ta ka di mi ta ki ta",
+      "syllables": [
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 7,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "misra"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "c_takatakimix2",
+      "notation": "ta ka ta ki ta ta ka ta ki ta",
+      "syllables": [
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 10,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra",
+        "khanda"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "c_faran_tisra",
+      "notation": "ta ki ta × 4",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 12,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "MACRO",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 4,
+      "tags": [
+        "faran",
+        "tisra-gati"
+      ]
+    },
+    {
+      "id": "c_faran_khanda",
+      "notation": "ta ka ta ki ta × 4",
+      "syllables": [
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "ta",
+        "ki",
+        "ta"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 20,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "MACRO",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 5,
+      "tags": [
+        "faran",
+        "khanda-gati"
+      ]
+    },
+    {
+      "id": "c_faran_misra",
+      "notation": "ta ki ta ta ka di mi × 4",
+      "syllables": [
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi",
+        "ta",
+        "ki",
+        "ta",
+        "ta",
+        "ka",
+        "di",
+        "mi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 28,
+      "weights": [
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "H",
+        "L",
+        "L",
+        "L",
+        "H"
+      ],
+      "character": "FLOWING",
+      "function": "MACRO",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 5,
+      "tags": [
+        "faran",
+        "misra-gati"
+      ]
+    },
+    {
+      "id": "c_gap2",
+      "notation": "— —",
+      "syllables": [
+        "—",
+        "—"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "L",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "GAP",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "kaarvai": true
+    },
+    {
+      "id": "c_gap3",
+      "notation": "— — —",
+      "syllables": [
+        "—",
+        "—",
+        "—"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "L",
+        "L",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "GAP",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "kaarvai": true
+    },
+    {
+      "id": "c_gap4",
+      "notation": "— — — —",
+      "syllables": [
+        "—",
+        "—",
+        "—",
+        "—"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "L",
+        "L",
+        "L",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "GAP",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "kaarvai": true
+    },
+    {
+      "id": "c_taiyaitaiyai",
+      "notation": "tai yai tai yai",
+      "syllables": [
+        "tai",
+        "yai",
+        "tai",
+        "yai"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L"
+      ],
+      "character": "STRAIGHT",
+      "function": "FILLER",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 1,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_taihattaihi",
+      "notation": "tai hat tai hi",
+      "syllables": [
+        "tai",
+        "hat",
+        "tai",
+        "hi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "CORE",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "dance",
+        "kudittu"
+      ]
+    },
+    {
+      "id": "c_taitat",
+      "notation": "tai tat",
+      "syllables": [
+        "tai",
+        "tat"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "H"
+      ],
+      "character": "SQUARE",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_thathai",
+      "notation": "tha thai",
+      "syllables": [
+        "tha",
+        "thai"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "L"
+      ],
+      "character": "RESONANT",
+      "function": "TRANSITION",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thaithathom",
+      "notation": "thai tha thom",
+      "syllables": [
+        "thai",
+        "tha",
+        "thom"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "CORE",
+      "usableNadais": [
+        "tisra",
+        "chaturasra"
+      ],
+      "difficulty": 2,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_thadhithom",
+      "notation": "tha dhi thom",
+      "syllables": [
+        "tha",
+        "dhi",
+        "thom"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "TRANSITION",
+      "usableNadais": [
+        "tisra",
+        "chaturasra"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_tham",
+      "notation": "tham",
+      "syllables": [
+        "tham"
+      ],
+      "durations": [
+        1
+      ],
+      "matraCount": 1,
+      "weights": [
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thom2",
+      "notation": "thom,",
+      "syllables": [
+        "thom"
+      ],
+      "durations": [
+        2
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thathom",
+      "notation": "tha tham",
+      "syllables": [
+        "tha",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "c_thakatham",
+      "notation": "tha ka tham",
+      "syllables": [
+        "tha",
+        "ka",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1,
+        1
+      ],
+      "matraCount": 3,
+      "weights": [
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_namthom",
+      "notation": "nam thom",
+      "syllables": [
+        "nam",
+        "thom"
+      ],
+      "durations": [
+        1,
+        1
+      ],
+      "matraCount": 2,
+      "weights": [
+        "H",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "LANDING",
+      "usableNadais": [
+        "tisra",
+        "chaturasra",
+        "khanda",
+        "misra",
+        "sankirna"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "c_thathaiatham",
+      "notation": "tha thai tha tham",
+      "syllables": [
+        "tha",
+        "thai",
+        "tha",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "ENDING",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 2,
+      "tags": [
+        "mohra",
+        "dance"
+      ]
+    },
+    {
+      "id": "c_dhiththaithathom",
+      "notation": "dhi thit thai tham",
+      "syllables": [
+        "dhi",
+        "thit",
+        "thai",
+        "tham"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 4,
+      "weights": [
+        "H",
+        "H",
+        "L",
+        "H"
+      ],
+      "character": "RESONANT",
+      "function": "ENDING",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "dance"
+      ]
+    },
+    {
+      "id": "c_taihat_x3",
+      "notation": "tai hat tai hat tai hi",
+      "syllables": [
+        "tai",
+        "hat",
+        "tai",
+        "hat",
+        "tai",
+        "hi"
+      ],
+      "durations": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matraCount": 6,
+      "weights": [
+        "H",
+        "L",
+        "H",
+        "L",
+        "H",
+        "L"
+      ],
+      "character": "BRISK",
+      "function": "ENDING",
+      "usableNadais": [
+        "chaturasra"
+      ],
+      "difficulty": 3,
+      "tags": [
+        "dance",
+        "teermana"
+      ]
+    }
+  ],
+  "aliases": [
+    {
+      "notation": "ta ka di mi",
+      "variants": [
+        "ta ka di mi",
+        "ta ka dhi mi",
+        "tha ka dhi mi",
+        "ta ka jhi mi"
+      ]
+    },
+    {
+      "notation": "ta ka jo nu",
+      "variants": [
+        "ta ka jo nu",
+        "ta ka jo no",
+        "tha ka jo nu"
+      ]
+    },
+    {
+      "notation": "ta ki ta",
+      "variants": [
+        "ta ki ta",
+        "tha ki ta",
+        "ta ki tom",
+        "ta din gi"
+      ]
+    },
+    {
+      "notation": "ta ka ta ki ta",
+      "variants": [
+        "ta ka ta ki ta",
+        "tha ka tha ki ta",
+        "ta ka ta ki tom"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "id": "korvai_x3",
+      "name": "Korvai — X X X",
+      "tags": [
+        "korvai"
+      ],
+      "description": "One phrase stated three times, landing on sam. The classic dance/mridangam cadence.",
+      "structure": "X X X + landing",
+      "repetitions": 3,
+      "landingMode": "eduppu",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Korvai phrase",
+          "minMatra": 2,
+          "maxMatra": 64,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "korvai_crescendo",
+      "name": "Korvai — 13-14-15 crescendo",
+      "tags": [
+        "korvai"
+      ],
+      "description": "Three phrases of increasing length (n, n+1, n+2); the whole group is played three times, then the landing. The canonical Adi/2-kalai/2-avartana korvai is 13+14+15 ×3 + 2 = 128.",
+      "structure": "(A B C) ×3 + landing",
+      "repetitions": 3,
+      "landingMode": "eduppu",
+      "staircase": 1,
+      "slots": [
+        {
+          "id": "A",
+          "label": "Short phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        },
+        {
+          "id": "B",
+          "label": "Medium phrase",
+          "minMatra": 3,
+          "maxMatra": 49,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        },
+        {
+          "id": "C",
+          "label": "Long phrase",
+          "minMatra": 4,
+          "maxMatra": 50,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "teermana_x3",
+      "name": "Teermana — X X X (sam landings)",
+      "tags": [
+        "teermana",
+        "korvai"
+      ],
+      "description": "A phrase spanning whole avartanas, played three times — each statement lands on sam (the phrase itself supplies the landing). Typical tirmana/teermana finisher.",
+      "structure": "X X X (each X = whole avartanas)",
+      "repetitions": 3,
+      "landingMode": "none",
+      "multipleOf": "avartana",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Teermana phrase",
+          "minMatra": 2,
+          "maxMatra": 128,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION",
+            "ENDING"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "mohra_korvai",
+      "name": "Mohra → Korvai",
+      "tags": [
+        "mohra",
+        "korvai"
+      ],
+      "description": "Full cadence: (A A A B) ×3 mohra rounds, the 'tha thai tha tham' cadence ×3, then a X X X korvai + landing. Front-padded with kaarvai to fill the tala cycles.",
+      "structure": "(A A A B)×3 · C×3 · X X X + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "autoAvartanas": true,
+      "slots": [
+        {
+          "id": "A",
+          "label": "Mohra line",
+          "minMatra": 8,
+          "maxMatra": 8,
+          "allowedFunctions": [
+            "CORE"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "B",
+          "label": "Mohra answer",
+          "minMatra": 8,
+          "maxMatra": 8,
+          "allowedFunctions": [
+            "CORE"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "C",
+          "label": "Cadence",
+          "fixedCell": "c_thathaiatham"
+        },
+        {
+          "id": "X",
+          "label": "Korvai phrase",
+          "minMatra": 2,
+          "maxMatra": 32,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "kuraippu",
+      "name": "Kuraippu (diminishing)",
+      "tags": [
+        "kuraippu"
+      ],
+      "description": "A long phrase restated in progressively shorter versions (roughly halving), converging onto sam. Drama through reduction.",
+      "structure": "A A/2 A/4 … + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "kind": "kuraippu",
+      "slots": [
+        {
+          "id": "A",
+          "label": "Opening phrase",
+          "minMatra": 4,
+          "maxMatra": 64,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "tirmana",
+      "name": "Tirmana (3-4-5 ×3)",
+      "tags": [
+        "tirmana",
+        "dance"
+      ],
+      "description": "The Bharatanatyam tirmana: a 3-matra phrase ×3, a 4-matra phrase ×3, a 5-matra phrase ×3 (ta-ki-ta / ta-ka-dhi-mi / ta-ka-ta-ki-ta families), then landing.",
+      "structure": "T3×3 T4×3 T5×3 + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "autoAvartanas": true,
+      "slots": [
+        {
+          "id": "T3",
+          "label": "3-matra phrase",
+          "minMatra": 3,
+          "maxMatra": 3,
+          "allowedFunctions": [
+            "CORE",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "T4",
+          "label": "4-matra phrase",
+          "minMatra": 4,
+          "maxMatra": 4,
+          "allowedFunctions": [
+            "CORE",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "T5",
+          "label": "5-matra phrase",
+          "minMatra": 5,
+          "maxMatra": 5,
+          "allowedFunctions": [
+            "CORE",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        }
+      ]
+    },
+    {
+      "id": "jathi_1avartana",
+      "name": "Jathi — one avartana",
+      "tags": [
+        "jathi"
+      ],
+      "description": "A single-cycle pattern exactly filling one avartana of the chosen tala/nadai/kalai. Building block for jathis.",
+      "structure": "X (exactly one avartana)",
+      "repetitions": 1,
+      "landingMode": "none",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Jathi phrase",
+          "minMatra": 2,
+          "maxMatra": 128,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION",
+            "ENDING"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "faran",
+      "name": "Faran (cross-rhythm)",
+      "tags": [
+        "faran"
+      ],
+      "description": "A cross-rhythm cell (tisra/khanda/misra inside chaturasra) repeated to span whole aksharas — mathematically guaranteed to resolve.",
+      "structure": "F × n (resolves on sam)",
+      "repetitions": 1,
+      "landingMode": "none",
+      "kind": "faran",
+      "slots": [
+        {
+          "id": "F",
+          "label": "Faran cell",
+          "allowedFunctions": [
+            "MACRO"
+          ],
+          "allowGaps": false
+        }
+      ]
+    },
+    {
+      "id": "gap_korvai",
+      "name": "Kaarvai korvai (with gaps)",
+      "tags": [
+        "korvai"
+      ],
+      "description": "Korvai shape where each statement of the phrase is separated by a kaarvai (rest), building tension into sam.",
+      "structure": "X G X G X + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "slots": [
+        {
+          "id": "X",
+          "label": "Korvai phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": false
+        },
+        {
+          "id": "G",
+          "label": "Kaarvai",
+          "minMatra": 2,
+          "maxMatra": 4,
+          "allowedFunctions": [
+            "GAP"
+          ],
+          "allowGaps": true
+        }
+      ]
+    },
+    {
+      "id": "aba_sandwich",
+      "name": "A-B-A sandwich",
+      "tags": [
+        "korvai"
+      ],
+      "description": "Open and close with the same phrase, different contrasting material in the middle. Good for jathi variation.",
+      "structure": "A B A + landing",
+      "repetitions": 1,
+      "landingMode": "eduppu",
+      "slots": [
+        {
+          "id": "A",
+          "label": "Frame phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        },
+        {
+          "id": "B",
+          "label": "Contrast phrase",
+          "minMatra": 2,
+          "maxMatra": 48,
+          "allowedFunctions": [
+            "CORE",
+            "FILLER",
+            "TRANSITION"
+          ],
+          "allowGaps": true
+        }
+      ]
+    }
+  ],
+  "adavus": [
+    {
+      "id": "tatta",
+      "name": "Tatta Adavu",
+      "family": "Tatta",
+      "sollukattu": "thai yai that",
+      "counts": 8,
+      "characters": [
+        "SQUARE",
+        "STRAIGHT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Flat-foot strikes in ardhamandali; the first adavu learned.",
+      "difficulty": 1
+    },
+    {
+      "id": "natta",
+      "name": "Natta Adavu",
+      "family": "Natta",
+      "sollukattu": "thai yai that (nattu)",
+      "counts": 8,
+      "characters": [
+        "SQUARE",
+        "STRAIGHT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Nattu position with heel-strike stretches; mardiya stance work.",
+      "difficulty": 2
+    },
+    {
+      "id": "visharu",
+      "name": "Visharu Adavu",
+      "family": "Visharu",
+      "sollukattu": "ta thei thei tat",
+      "counts": 8,
+      "characters": [
+        "FLOWING",
+        "STRAIGHT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Side-swinging traverse steps (visharu — to spread out), covering stage space.",
+      "difficulty": 2
+    },
+    {
+      "id": "kudittu_mettu",
+      "name": "Kudittu Mettu Adavu",
+      "family": "Kudittu Mettu",
+      "sollukattu": "tai hat tai hi",
+      "counts": 8,
+      "characters": [
+        "BRISK"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Jump-and-strike mettu combinations; sharp, percussive landings.",
+      "difficulty": 3
+    },
+    {
+      "id": "sarikkal",
+      "name": "Sarikkal / Kal Adavu",
+      "family": "Sarikkal",
+      "sollukattu": "tha thei thei",
+      "counts": 8,
+      "characters": [
+        "STRAIGHT",
+        "RESONANT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Gliding/sliding steps (sarikka — to glide) with held endings.",
+      "difficulty": 2
+    },
+    {
+      "id": "mandi",
+      "name": "Mandi Adavu",
+      "family": "Mandi",
+      "sollukattu": "tha thai thai (mandi)",
+      "counts": 8,
+      "characters": [
+        "RESONANT",
+        "SQUARE"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Full-sit (mandi) positions with sweeping strikes.",
+      "difficulty": 4
+    },
+    {
+      "id": "tirmana_adavu",
+      "name": "Tirmana Adavu",
+      "family": "Tirmana",
+      "sollukattu": "ta ki ta · ta ka dhi mi · ta ka ta ki ta",
+      "counts": 36,
+      "characters": [
+        "FLOWING"
+      ],
+      "nadais": [
+        "chaturasra",
+        "tisra"
+      ],
+      "description": "The classic three-pace finisher (3-4-5) closing jathis and varnams.",
+      "difficulty": 4
+    },
+    {
+      "id": "teermana_adavu",
+      "name": "Teermana Adavu",
+      "family": "Teermana",
+      "sollukattu": "tai hat tai hat tai hi",
+      "counts": 6,
+      "characters": [
+        "BRISK",
+        "RESONANT"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Triple-landing finishing adavu that converges on sam.",
+      "difficulty": 4
+    },
+    {
+      "id": "panjanan",
+      "name": "Panjanan Adavu",
+      "family": "Panjanan",
+      "sollukattu": "thai that thai that thai hi",
+      "counts": 8,
+      "characters": [
+        "SQUARE"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Sharp striking combinations in place; strong arangetram material.",
+      "difficulty": 3
+    },
+    {
+      "id": "hitchu",
+      "name": "Hitchu / Kattadavu",
+      "family": "Kattu",
+      "sollukattu": "kit a ta ka",
+      "counts": 8,
+      "characters": [
+        "SQUARE",
+        "BRISK"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Small held-step adavus used as connectors between larger movements.",
+      "difficulty": 2
+    },
+    {
+      "id": "thagaditham",
+      "name": "Thagaditham Adavu",
+      "family": "Thagaditham",
+      "sollukattu": "tha ka dhi mi thom (thagaditham)",
+      "counts": 8,
+      "characters": [
+        "RESONANT",
+        "FLOWING"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Tha-ga-di-gee-thom striking sequence with chest and foot accents.",
+      "difficulty": 3
+    },
+    {
+      "id": "sutral",
+      "name": "Sutral / Bramari Adavu",
+      "family": "Sutral",
+      "sollukattu": "thai yai that (turn)",
+      "counts": 8,
+      "characters": [
+        "FLOWING",
+        "BRISK"
+      ],
+      "nadais": [
+        "chaturasra"
+      ],
+      "description": "Spinning/turning adavus for coverage and closure of stage space.",
+      "difficulty": 5
+    }
+  ]
+}
